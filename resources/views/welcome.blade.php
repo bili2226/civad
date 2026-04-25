@@ -1,110 +1,127 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="id">
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-
-        <title>{{ config('app.name', 'Laravel') }}</title>
-
+        <title>CIVAD - Sistem Informasi Buku Pendidikan</title>
         <!-- Fonts -->
-        <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" />
-
-        <!-- Styles / Scripts -->
-        @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
-            @vite(['resources/css/app.css', 'resources/js/app.js'])
-        @else
-            <script src="https://cdn.tailwindcss.com"></script>
-        @endif
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+        <script src="https://cdn.tailwindcss.com"></script>
+        <style>
+            body { font-family: 'Plus Jakarta Sans', sans-serif; }
+            .glass { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.2); }
+            .bg-mesh {
+                background-color: #ffffff;
+                background-image: radial-gradient(at 0% 0%, hsla(225, 100%, 94%, 1) 0, transparent 50%), 
+                                  radial-gradient(at 50% 0%, hsla(225, 100%, 90%, 1) 0, transparent 50%), 
+                                  radial-gradient(at 100% 0%, hsla(225, 100%, 94%, 1) 0, transparent 50%);
+            }
+            .floating { animation: floating 3s ease-in-out infinite; }
+            @keyframes floating {
+                0% { transform: translateY(0px); }
+                50% { transform: translateY(-15px); }
+                100% { transform: translateY(0px); }
+            }
+        </style>
     </head>
-    <body class="bg-[#F4F7FB] text-gray-800 font-sans min-h-screen">
-        <div class="flex flex-col items-center pt-16 pb-24">
-            <!-- Header / Hero Section -->
-            <div class="text-center flex flex-col items-center mb-14 px-4">
-                <!-- Logo Icon -->
-                <div class="w-[72px] h-[72px] bg-[#2563EB] text-white rounded-[20px] flex items-center justify-center mb-5 shadow-sm">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-10 h-10">
+    <body class="bg-mesh min-h-screen text-[#1E293B]">
+        
+        <!-- Top Navigation -->
+        <nav class="max-w-7xl mx-auto px-6 py-6 flex items-center justify-between relative z-10">
+            <div class="flex items-center gap-3">
+                <div class="w-11 h-11 bg-indigo-600 text-white rounded-[14px] flex items-center justify-center shadow-lg shadow-indigo-200">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-6 h-6">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25" />
                     </svg>
                 </div>
-                
-                <h1 class="text-[40px] font-extrabold text-[#111827] tracking-tight mb-2">Sistem Informasi Penjualan Buku Pendidikan</h1>
-                <h1 class="text-[40px] font-extrabold text-[#111827] tracking-tight mb-2">CV. ARYA DUTA TANGERANG</h1>
-                
-                <div class="flex items-center justify-center gap-4">
-                    @auth
-                        <a href="{{ url('/dashboard') }}" class="flex items-center justify-center gap-2 bg-[#2563EB] text-white px-6 py-[10px] rounded-xl text-[14px] font-semibold shadow-sm hover:bg-blue-700 transition">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-[18px] h-[18px]">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 21v-7.5a.75.75 0 0 1 .75-.75h3a.75.75 0 0 1 .75.75V21m-4.5 0H2.36m11.14 0H18m0 0h3.64m-1.39 0V9.309c0-.236-.105-.461-.282-.609L12.53 3.61a.75.75 0 0 0-1.06 0l-8.91 5.09a.75.75 0 0 0-.282.61V21M7.5 15h3m-3-3h3m-3-3v3m3-3v3m-3-3v-3" />
-                            </svg>
-                            Dashboard
-                        </a>
-                    @else
-                        <a href="{{ url('/login') }}" class="flex items-center justify-center gap-2 bg-[#2563EB] text-white px-6 py-[10px] rounded-xl text-[14px] font-semibold shadow-sm hover:bg-blue-700 transition min-w-[120px]">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-[18px] h-[18px]">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 9V5.25A2.25 2.25 0 0 1 10.5 3h6a2.25 2.25 0 0 1 2.25 2.25v13.5A2.25 2.25 0 0 1 16.5 21h-6a2.25 2.25 0 0 1-2.25-2.25V15m-3 0l3-3m0 0l-3-3m3 3H2.25" />
-                            </svg>
-                            Masuk
-                        </a>
-                        
-                        @if (Route::has('register'))
-                            <a href="{{ url('/register') }}" class="flex items-center justify-center gap-2 bg-[#F4F7FB] text-[#2563EB] border-[1.5px] border-[#2563EB] px-6 py-[10px] rounded-xl text-[14px] font-semibold hover:bg-blue-50 transition min-w-[120px]">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-[18px] h-[18px]">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M18 19v-6m0 0V7m0 6h6m-6 0h-6m-9 6a9 9 0 1 1 18 0M3 20a6 6 0 0 1 12 0v1H3v-1Z" />
-                                </svg>
-                                Daftar
-                            </a>
-                        @endif
-                    @endauth
+                <div class="flex flex-col">
+                    <span class="font-extrabold text-[20px] tracking-tight leading-none text-indigo-950">CIVAD</span>
+                    <span class="text-[11px] font-bold text-indigo-400 uppercase tracking-widest mt-0.5">Arya Duta</span>
                 </div>
             </div>
+            
+            <a href="{{ url('/admin/login') }}" class="px-5 py-2.5 bg-white/50 border border-indigo-100 rounded-full text-[13px] font-bold text-indigo-600 hover:bg-white hover:shadow-md transition-all duration-300 backdrop-blur-sm">
+                ADMIN PORTAL
+            </a>
+        </nav>
 
-            <!-- Katalog Buku Section -->
-            <div class="w-full max-w-[1150px] px-6">
-                <div class="text-center mb-8">
-                    <h2 class="text-[24px] font-bold text-[#111827] mb-2 tracking-tight">Katalog Buku Tersedia</h2>
-                    <p class="text-[14px] text-gray-500">Lihat koleksi buku pendidikan berkualitas kami</p>
-                </div>
+        <!-- Main Content -->
+        <main class="max-w-7xl mx-auto px-6 pt-12 pb-24 relative z-10">
+            <div class="flex flex-col lg:flex-row items-center gap-20">
+                <!-- Left: Text -->
+                <div class="lg:w-1/2">
+                    <div class="inline-flex items-center gap-2 px-3 py-1.5 bg-indigo-50 border border-indigo-100 rounded-full text-indigo-600 text-[12px] font-bold mb-6">
+                        <span class="flex h-2 w-2 rounded-full bg-indigo-600 animate-pulse"></span>
+                        CV ARYA DUTA OFFICIAL PLATFORM
+                    </div>
+                    <h1 class="text-[56px] lg:text-[72px] font-extrabold text-indigo-950 leading-[1.1] tracking-tight mb-8">
+                        Masa Depan <br>
+                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-blue-500">Pendidikan</span> <br>
+                        di Genggaman.
+                    </h1>
+                    <p class="text-[18px] text-slate-500 max-w-[500px] leading-relaxed mb-10">
+                        Akses katalog buku pendidikan terlengkap dari penerbit CV Arya Duta. Cepat, transparan, dan terpercaya untuk seluruh mitra pendidikan kami.
+                    </p>
 
-                <!-- Book Grid -->
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    
-                    @foreach($dummyBooks as $book)
-                    <div class="bg-white rounded-[20px] shadow-sm border border-gray-100 overflow-hidden flex flex-col hover:shadow-md hover:-translate-y-1 transition duration-200">
-                        <!-- Card Image -->
-                        <div class="h-[280px] w-full overflow-hidden bg-gray-50 border-b border-gray-50">
-                            <img src="{{ $book['image'] }}" alt="{{ $book['title'] }}" class="w-full h-full object-cover">
-                        </div>
-                        
-                        <!-- Card Content -->
-                        <div class="p-6 flex flex-col flex-grow">
-                            <div class="flex items-center gap-2 mb-3">
-                                <span class="bg-blue-50 text-[#2563EB] text-[10px] font-bold px-2 py-0.5 rounded-md border border-blue-100 uppercase tracking-wider">{{ $book['category'] }}</span>
-                                <span class="bg-gray-50 text-gray-400 text-[10px] font-bold px-2 py-0.5 rounded-md border border-gray-100 uppercase tracking-wider">{{ $book['class'] }}</span>
-                            </div>
-                            
-                            <h3 class="font-bold text-[#111827] mb-2 text-[15px] leading-tight flex-grow">{{ $book['title'] }}</h3>
-                            
-                            <!-- Price and Action -->
-                            <div class="flex items-end justify-between mt-6">
-                                <div>
-                                    <div class="text-[#2563EB] font-bold text-[18px] leading-none mb-1.5 tracking-tight">{{ $book['price'] }}</div>
-                                    <div class="text-[12px] text-gray-400 leading-none">Stok: {{ $book['stock'] }}</div>
-                                </div>
-                                
-                                <a href="{{ url('/login') }}" class="bg-[#2563EB] text-white px-5 py-2 rounded-[10px] text-[12px] font-bold hover:bg-blue-700 transition flex items-center justify-center gap-1.5 shadow-sm active:scale-[0.98]">
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-3.5 h-3.5">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" />
-                                    </svg>
-                                    Beli
-                                </a>
-                            </div>
+                    <div class="flex items-center gap-4">
+                        <a href="{{ url('/login') }}" class="group relative px-8 py-4 bg-indigo-600 text-white rounded-[18px] font-bold text-[16px] shadow-xl shadow-indigo-200 hover:bg-indigo-700 transition-all duration-300 active:scale-95 flex items-center gap-3">
+                            Mulai Sekarang
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-5 h-5 group-hover:translate-x-1 transition-transform">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+                            </svg>
+                        </a>
+                        <div class="h-14 w-px bg-slate-200 mx-2"></div>
+                        <div class="flex flex-col">
+                            <span class="text-[14px] font-bold text-slate-900">25+ Tahun</span>
+                            <span class="text-[12px] text-slate-500 font-medium tracking-tight">Berdedikasi untuk Pendidikan</span>
                         </div>
                     </div>
-                    @endforeach
+                </div>
+
+                <!-- Right: Visual -->
+                <div class="lg:w-1/2 relative hidden lg:block">
+                    <!-- Background Shapes -->
+                    <div class="absolute -top-20 -right-20 w-[500px] h-[500px] bg-indigo-200/50 rounded-full blur-[80px]"></div>
+                    <div class="absolute -bottom-20 -left-20 w-[300px] h-[300px] bg-blue-200/50 rounded-full blur-[60px]"></div>
                     
+                    <!-- Floating Cards -->
+                    <div class="relative grid grid-cols-2 gap-6 p-4">
+                        <div class="glass p-6 rounded-[32px] shadow-2xl floating flex flex-col gap-4">
+                            <div class="w-12 h-12 bg-blue-100 rounded-2xl flex items-center justify-center text-blue-600">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25" /></svg>
+                            </div>
+                            <h3 class="font-bold text-[18px]">Ribuan Katalog</h3>
+                            <p class="text-[13px] text-slate-500 leading-relaxed">Buku pendidikan berkualitas untuk tingkat SD, SMP, hingga SMA.</p>
+                        </div>
+
+                        <div class="glass p-6 rounded-[32px] shadow-2xl floating flex flex-col gap-4 mt-12" style="animation-delay: -1.5s">
+                            <div class="w-12 h-12 bg-indigo-100 rounded-2xl flex items-center justify-center text-indigo-600">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18.75a60.07 60.07 0 0 1 15.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 0 1 3 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125H3.75m16.5-12.75V15" /></svg>
+                            </div>
+                            <h3 class="font-bold text-[18px]">Akses Cepat</h3>
+                            <p class="text-[13px] text-slate-500 leading-relaxed">Sistem manajemen pesanan modern untuk efisiensi transaksi Anda.</p>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
+        </main>
+
+        <!-- Footer Stats -->
+        <footer class="max-w-7xl mx-auto px-6 py-12 border-t border-indigo-100 relative z-10 flex flex-wrap gap-12">
+            <div>
+                <span class="block text-[24px] font-extrabold text-indigo-950 leading-none">1998</span>
+                <span class="text-[12px] font-bold text-indigo-400 uppercase tracking-widest mt-1">Tahun Berdiri</span>
+            </div>
+            <div>
+                <span class="block text-[24px] font-extrabold text-indigo-950 leading-none">10k+</span>
+                <span class="text-[12px] font-bold text-indigo-400 uppercase tracking-widest mt-1">Mitra Aktif</span>
+            </div>
+            <div>
+                <span class="block text-[24px] font-extrabold text-indigo-950 leading-none">500+</span>
+                <span class="text-[12px] font-bold text-indigo-400 uppercase tracking-widest mt-1">Judul Buku</span>
+            </div>
+        </footer>
     </body>
 </html>

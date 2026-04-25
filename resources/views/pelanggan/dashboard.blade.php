@@ -3,157 +3,172 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Customer Dashboard - CIVAD</title>
+    <title>Katalog Buku - CIVAD</title>
     <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600,700" rel="stylesheet" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body { font-family: 'Instrument Sans', sans-serif; background-color: #F8FAFC; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #F8FAFC; }
+        .glass-nav { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(12px); }
+        .book-card { transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+        .book-card:hover { transform: translateY(-8px); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.08); }
+        .image-zoom { transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1); }
+        .book-card:hover .image-zoom { transform: scale(1.1); }
     </style>
 </head>
-<body class="text-gray-800">
+<body class="text-[#1E293B]">
 
-    <!-- Header / Navbar -->
-    <header class="bg-white border-b border-gray-100 sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-6 h-[72px] flex items-center justify-between">
-            
-            <!-- Logo -->
-            <div class="flex items-center gap-3">
-                <div class="w-10 h-10 bg-[#2563EB] text-white rounded-xl flex items-center justify-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25" />
-                    </svg>
-                </div>
-                <div>
-                    <h1 class="font-bold text-[18px] text-[#111827] leading-none tracking-tight">CIVAD</h1>
-                    <p class="text-[11px] text-gray-500 mt-0.5">CV Arya Duta</p>
-                </div>
-            </div>
-
-            <!-- Nav Links -->
-            <nav class="hidden md:flex items-center gap-2 text-[14px] font-medium text-gray-500">
-                <a href="{{ url('/pelanggan/beranda') }}" class="flex items-center gap-2 px-4 py-2 hover:bg-gray-50 rounded-lg transition hover:text-[#111827]">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-[18px] h-[18px]"><path stroke-linecap="round" stroke-linejoin="round" d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" /></svg>
-                    Beranda
-                </a>
-                <a href="#" class="flex items-center gap-2 px-4 py-2 text-[#2563EB] bg-[#F0F5FF] rounded-lg transition">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-[18px] h-[18px]"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25" /></svg>
-                    Katalog Buku
-                </a>
-                <a href="{{ url('/pelanggan/status') }}" class="flex items-center gap-2 px-4 py-2 hover:bg-gray-50 rounded-lg transition hover:text-[#111827]">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-[18px] h-[18px]"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18L9 11.25l4.306 4.306a11.95 11.95 0 0 1 5.814-5.518l2.74-1.22m0 0-5.94-2.281m5.94 2.28-2.28 5.941" /></svg>
-                    Status Pesanan
-                </a>
-                <a href="{{ url('/pelanggan/riwayat') }}" class="flex items-center gap-2 px-4 py-2 hover:bg-gray-50 rounded-lg transition hover:text-[#111827]">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-[18px] h-[18px]"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" /></svg>
-                    Riwayat Transaksi
-                </a>
-            </nav>
-
-            <!-- Right Actions -->
-            <div class="flex items-center gap-4">
-                <a href="{{ url('/pelanggan/keranjang') }}" class="text-gray-500 hover:text-gray-800 transition relative">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-[22px] h-[22px]">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" />
-                    </svg>
-                    @if(session('cart_count', 0) > 0)
-                    <span class="absolute -top-1.5 -right-1.5 bg-red-500 text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center border border-white">
-                        {{ session('cart_count') }}
-                    </span>
-                    @endif
-                </a>
-                <div class="h-6 w-px bg-gray-200"></div>
-                <div class="flex items-center gap-2 bg-[#F0F5FF] text-[#2563EB] px-3 py-1.5 rounded-full text-[13px] font-semibold border border-blue-100 uppercase tracking-tight">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" /></svg>
-                    {{ session('username') ?? 'andi' }}
-                </div>
-                <a href="{{ url('/') }}" class="text-gray-400 hover:text-gray-600 transition">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15M12 9l-3 3m0 0 3 3m-3-3h12.75" /></svg>
-                </a>
-            </div>
-            
-        </div>
-    </header>
-
-    <!-- Main Section -->
-    <main class="max-w-7xl mx-auto px-6 py-8">
-        
-        <!-- Search and Filter Bar -->
-        <div class="flex flex-col md:flex-row gap-4 mb-8">
-            <div class="flex-1 relative">
-                <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-[18px] h-[18px] text-gray-400">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
-                    </svg>
-                </div>
-                <input type="text" placeholder="Cari berdasarkan judul buku..." class="w-full pl-11 pr-4 py-3 bg-white border border-gray-200 rounded-[12px] text-[14px] focus:outline-none focus:border-[#2563EB] focus:ring-1 focus:ring-[#2563EB]">
-            </div>
-            <div class="w-full md:w-[320px] relative">
-                <select class="w-full pl-4 pr-10 py-3 bg-white border border-gray-200 rounded-[12px] text-[14px] text-gray-700 appearance-none focus:outline-none focus:border-[#2563EB] focus:ring-1 focus:ring-[#2563EB]">
-                    <option>Semua Tingkat Pendidikan</option>
-                    <option>SD/MI</option>
-                    <option>SMP/MTs</option>
-                    <option>SMA/SMK/MA</option>
-                </select>
-                <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4 text-gray-400">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
-                    </svg>
-                </div>
-            </div>
-        </div>
-
-        <!-- Title -->
-        <p class="text-[13px] text-gray-500 mb-4">Menampilkan <span class="font-bold text-gray-900">6</span> buku</p>
-
-        <!-- Catalog Grid -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            
-
-            @foreach($dummyBooks as $book)
-            <div class="bg-white rounded-[20px] p-4 shadow-sm border border-gray-100/80 hover:shadow-md transition">
-                <!-- Image -->
-                <a href="{{ url('/pelanggan/buku/' . $loop->iteration) }}" class="block aspect-[4/3] rounded-[14px] overflow-hidden bg-gray-100 mb-4 group block">
-                    <img src="{{ $book['image'] }}" alt="Book cover" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
-                </a>
-                
-                <!-- Badges -->
-                <div class="flex gap-2 mb-3">
-                    <span class="px-2.5 py-1 bg-[#F0F5FF] text-[#2563EB] rounded-full text-[11px] font-bold">{{ $book['category'] }}</span>
-                    <span class="px-2.5 py-1 bg-gray-50 border border-gray-200 text-gray-600 rounded-full text-[11px] font-semibold">{{ $book['class'] }}</span>
-                </div>
-
-                <!-- Info -->
-                <a href="{{ url('/pelanggan/buku/' . $loop->iteration) }}" class="block">
-                    <h3 class="font-bold text-[#111827] text-[16px] leading-tight mb-3 hover:text-[#2563EB] transition">{{ $book['title'] }}</h3>
-                </a>
-                
-                <div class="flex items-center justify-between mt-auto mb-4">
-                    <span class="text-[#2563EB] font-bold text-[18px]">{{ $book['price'] }}</span>
-                    <div class="flex items-center gap-1.5 text-green-600 bg-green-50 px-2 py-0.5 rounded-[6px]">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-[12px] h-[12px]">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="m21 7.5-9-5.25L3 7.5m18 0-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9" />
+    <!-- Navbar -->
+    <nav class="glass-nav border-b border-slate-100 sticky top-0 z-50">
+        <div class="max-w-[1280px] mx-auto px-6">
+            <div class="flex justify-between h-[88px]">
+                <!-- Left: Logo -->
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-indigo-600 text-white rounded-xl flex items-center justify-center shadow-lg shadow-indigo-100">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-6 h-6">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25" />
                         </svg>
-                        <span class="text-[11px] font-bold">Stok: {{ $book['stock'] }}</span>
+                    </div>
+                    <div class="flex flex-col">
+                        <span class="text-indigo-950 font-black text-[18px] leading-tight tracking-tight">CIVAD</span>
+                        <span class="text-indigo-400 font-bold text-[10px] uppercase tracking-widest leading-tight">Arya Duta</span>
                     </div>
                 </div>
 
-                <!-- Action -->
-                <form action="{{ url('/pelanggan/keranjang/tambah') }}" method="POST">
-                    @csrf
-                    <input type="hidden" name="buku_id" value="{{ $loop->iteration }}">
-                    <input type="hidden" name="qty" value="1">
-                    <button type="submit" class="w-full flex items-center justify-center gap-2 bg-[#2563EB] text-white py-2.5 rounded-[10px] text-[13px] font-bold hover:bg-blue-700 transition">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-[16px] h-[16px]">
+                <!-- Middle: Links -->
+                <div class="hidden lg:flex items-center gap-2">
+                    <a href="{{ url('/pelanggan/beranda') }}" class="flex items-center gap-2 px-5 py-2.5 text-slate-500 hover:text-indigo-600 hover:bg-indigo-50/50 rounded-2xl font-bold text-[14px] transition-all">
+                        Beranda
+                    </a>
+                    <a href="{{ url('/pelanggan/dashboard') }}" class="flex items-center gap-2 px-5 py-2.5 bg-indigo-50 text-indigo-600 rounded-2xl font-bold text-[14px] transition-all">
+                        Katalog Buku
+                    </a>
+                    <a href="{{ url('/pelanggan/status') }}" class="flex items-center gap-2 px-5 py-2.5 text-slate-500 hover:text-indigo-600 hover:bg-indigo-50/50 rounded-2xl font-bold text-[14px] transition-all">
+                        Status Pesanan
+                    </a>
+                    <a href="{{ url('/pelanggan/riwayat') }}" class="flex items-center gap-2 px-5 py-2.5 text-slate-500 hover:text-indigo-600 hover:bg-indigo-50/50 rounded-2xl font-bold text-[14px] transition-all">
+                        Riwayat
+                    </a>
+                </div>
+
+                <!-- Right: Actions -->
+                <div class="flex items-center gap-4">
+                    <a href="{{ url('/pelanggan/keranjang') }}" class="w-12 h-12 flex items-center justify-center text-slate-400 hover:text-indigo-600 bg-slate-50 hover:bg-indigo-50 rounded-2xl transition-all relative">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" />
                         </svg>
-                        Tambah ke Keranjang
-                    </button>
-                </form>
+                        @if(session('cart_count', 0) > 0)
+                        <span class="absolute -top-1 -right-1 bg-indigo-600 text-white text-[10px] font-black w-5 h-5 rounded-full flex items-center justify-center border-2 border-white">
+                            {{ session('cart_count') }}
+                        </span>
+                        @endif
+                    </a>
+                    <div class="h-8 w-px bg-slate-100 hidden sm:block"></div>
+                    <div class="hidden sm:flex items-center gap-3 bg-slate-50 px-4 py-2 rounded-2xl border border-slate-100">
+                        <div class="text-right">
+                            <p class="text-[13px] font-black text-indigo-950 leading-none">{{ session('username') ?? 'Customer' }}</p>
+                            <p class="text-[10px] font-bold text-indigo-400 uppercase tracking-widest mt-1">Member</p>
+                        </div>
+                        <div class="w-9 h-9 bg-indigo-600 text-white rounded-xl flex items-center justify-center font-bold shadow-lg shadow-indigo-100 uppercase">
+                            {{ substr(session('username') ?? 'C', 0, 1) }}
+                        </div>
+                    </div>
+                    <form action="{{ route('logout') }}" method="POST">
+                        @csrf
+                        <button type="submit" class="w-10 h-10 flex items-center justify-center text-rose-500 hover:bg-rose-50 rounded-xl transition-all active:scale-95 group">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-5 h-5 group-hover:translate-x-0.5 transition-transform"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 9V5.25A2.25 2.25 0 0 1 10.5 3h6a2.25 2.25 0 0 1 2.25 2.25v13.5A2.25 2.25 0 0 1 16.5 21h-6a2.25 2.25 0 0 1-2.25-2.25V15m-3 0-3-3m0 0 3-3m-3 3H15" /></svg>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Section -->
+    <main class="max-w-[1280px] mx-auto px-6 py-12">
+        <!-- Search & Filters -->
+        <div class="flex flex-col md:flex-row gap-6 mb-12">
+            <div class="flex-grow relative group">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-5 h-5 absolute left-5 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-indigo-600 transition-colors"><path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" /></svg>
+                <input type="text" placeholder="Cari judul buku atau penulis..." class="w-full bg-white border border-slate-200 rounded-[24px] py-4 pl-14 pr-6 text-[15px] font-medium focus:outline-none focus:ring-4 focus:ring-indigo-50 focus:border-indigo-600 transition-all shadow-sm">
+            </div>
+            <div class="md:w-[300px] relative">
+                <select class="w-full bg-white border border-slate-200 rounded-[24px] py-4 px-6 text-[15px] font-bold text-slate-600 focus:outline-none focus:ring-4 focus:ring-indigo-50 transition-all shadow-sm appearance-none cursor-pointer">
+                    <option>Semua Tingkat</option>
+                    <option>SD / MI</option>
+                    <option>SMP / MTs</option>
+                    <option>SMA / SMK / MA</option>
+                </select>
+                <div class="absolute inset-y-0 right-6 flex items-center pointer-events-none text-slate-400">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" /></svg>
+                </div>
+            </div>
+        </div>
+
+        @if(session('success'))
+        <div class="mb-10 p-5 bg-emerald-50 border border-emerald-100 text-emerald-600 text-[14px] rounded-[24px] font-black flex items-center gap-4 animate-in fade-in slide-in-from-top duration-300">
+            <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-sm">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-5 h-5"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>
+            </div>
+            {{ session('success') }}
+        </div>
+        @endif
+
+        <div class="flex items-center justify-between mb-8 px-2">
+            <h2 class="text-[24px] font-black text-indigo-950 tracking-tight">Koleksi Buku Terbaru</h2>
+            <p class="text-[14px] font-bold text-slate-400 uppercase tracking-widest">Tersedia <span class="text-indigo-600">{{ count($dummyBooks) }}</span> Buku</p>
+        </div>
+
+        <!-- Catalog Grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+            @foreach($dummyBooks as $book)
+            <div class="book-card bg-white rounded-[32px] p-5 border border-slate-100 shadow-sm flex flex-col group">
+                <!-- Image Wrapper -->
+                <div class="relative aspect-[3/4] rounded-[24px] overflow-hidden bg-slate-50 mb-6 shadow-inner">
+                    <img src="{{ $book['image'] }}" class="image-zoom w-full h-full object-cover">
+                    <!-- Category Badge Floating -->
+                    <div class="absolute top-4 left-4">
+                        <span class="px-4 py-1.5 bg-white/90 backdrop-blur-md text-indigo-600 text-[10px] font-black uppercase tracking-widest rounded-full shadow-sm">
+                            {{ $book['category'] }}
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Content -->
+                <div class="flex-grow">
+                    <div class="flex items-center gap-2 mb-3">
+                        <span class="text-[11px] font-bold text-slate-400 uppercase tracking-widest">{{ $book['class'] }}</span>
+                        <div class="w-1 h-1 bg-slate-200 rounded-full"></div>
+                        <span class="text-[11px] font-black text-emerald-500 uppercase tracking-widest">Stok: {{ $book['stock'] }}</span>
+                    </div>
+                    <a href="{{ url('/pelanggan/buku/' . $loop->iteration) }}" class="block group/title">
+                        <h3 class="text-[17px] font-black text-indigo-950 leading-[1.3] mb-4 group-hover/title:text-indigo-600 transition-colors line-clamp-2 min-h-[44px]">
+                            {{ $book['title'] }}
+                        </h3>
+                    </a>
+                </div>
+
+                <!-- Footer / Price & Action -->
+                <div class="mt-4 pt-6 border-t border-slate-50 flex flex-col gap-4">
+                    <div class="flex items-center justify-between">
+                        <span class="text-[20px] font-black text-indigo-600 tracking-tight">{{ $book['price'] }}</span>
+                    </div>
+                    <form action="{{ url('/pelanggan/keranjang/tambah') }}" method="POST">
+                        @csrf
+                        <input type="hidden" name="buku_id" value="{{ $loop->iteration }}">
+                        <input type="hidden" name="qty" value="1">
+                        <button type="submit" class="w-full flex items-center justify-center gap-3 bg-indigo-600 text-white py-3.5 rounded-2xl text-[14px] font-black shadow-lg shadow-indigo-100 hover:bg-indigo-700 hover:shadow-indigo-200 transition-all active:scale-95 group/btn">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4 group-hover/btn:rotate-12 transition-transform">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                            </svg>
+                            Keranjang
+                        </button>
+                    </form>
+                </div>
             </div>
             @endforeach
-
         </div>
     </main>
 
