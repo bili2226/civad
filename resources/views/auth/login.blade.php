@@ -113,6 +113,15 @@
                 btnPelanggan.className = "flex-1 py-2.5 rounded-[14px] text-[13px] font-bold transition-all duration-300 flex items-center justify-center gap-2 text-slate-500 hover:text-indigo-600";
             }
         }
+
+        // Handle role from query parameter
+        window.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const role = urlParams.get('role');
+            if (role === 'admin' || role === 'pelanggan') {
+                setRole(role);
+            }
+        });
     </script>
 </body>
 </html>

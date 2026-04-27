@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use Midtrans\Config;
+use Midtrans\Snap;
 
 // Landing Page
 Route::get('/', function () {
@@ -261,22 +263,20 @@ Route::post('/pelanggan/konfirmasi-pembayaran', function (Request $request) {
     $shipping = 8400;
     $total = $subtotal + $shipping;
 
-    $paymentProofPath = null;
-    if ($request->hasFile('payment_proof')) {
-        $file = $request->file('payment_proof');
-        $fileName = time() . '_' . $orderNumber . '.' . $file->getClientOriginalExtension();
-        $file->move(public_path('uploads/payments'), $fileName);
-        $paymentProofPath = '/uploads/payments/' . $fileName;
-    }
+    // Konfigurasi Midtrans
+    Config::$serverKey = env('MIDTRANS_SERVER_KEY');
+    Config::$isProduction = env('MIDTRANS_IS_PRODUCTION', false);
+    Config::$isSanitized = true;
+    Config::$is3ds = true;
 
-    DB::transaction(function () use ($user, $orderNumber, $total, $cart, $paymentProofPath) {
+    $order = null;
+    DB::transaction(function () use ($user, $orderNumber, $total, $cart, &$order) {
         $order = Order::create([
             'user_id' => $user->id,
             'order_number' => $orderNumber,
             'total_amount' => $total,
-            'status' => 'Menunggu Verifikasi',
-            'payment_method' => 'BCA Transfer',
-            'payment_proof' => $paymentProofPath,
+            'status' => 'Pending',
+            'payment_method' => 'Midtrans',
         ]);
 
         foreach ($cart as $item) {
@@ -296,11 +296,74 @@ Route::post('/pelanggan/konfirmasi-pembayaran', function (Request $request) {
         }
     });
 
-    session(['order_confirmed' => true]);
-    session(['cart' => []]);
-    session(['cart_count' => 0]);
-    return redirect('/pelanggan/riwayat')->with('success', 'Pesanan Anda #' . $orderNumber . ' telah berhasil disimpan dan sedang diverifikasi!');
+    // Buat Transaksi Midtrans
+    $params = [
+        'transaction_details' => [
+            'order_id' => $orderNumber,
+            'gross_amount' => $total,
+        ],
+        'customer_details' => [
+            'first_name' => $user->name,
+            'email' => $user->username . '@example.com', // Dummy email as username is used
+        ],
+    ];
+
+    try {
+        $snapToken = Snap::getSnapToken($params);
+        $order->snap_token = $snapToken;
+        $order->save();
+
+        session(['cart' => []]);
+        session(['cart_count' => 0]);
+
+        return view('pelanggan.pembayaran_midtrans', [
+            'order' => $order,
+            'snapToken' => $snapToken
+        ]);
+    } catch (\Exception $e) {
+        return redirect()->back()->with('error', 'Gagal terhubung ke Midtrans: ' . $e->getMessage());
+    }
 });
+
+// Midtrans Notification Webhook
+Route::post('/midtrans/callback', function (Request $request) {
+    Config::$serverKey = env('MIDTRANS_SERVER_KEY');
+    Config::$isProduction = env('MIDTRANS_IS_PRODUCTION', false);
+
+    $notification = new \Midtrans\Notification();
+
+    $transaction = $notification->transaction_status;
+    $type = $notification->payment_type;
+    $order_id = $notification->order_id;
+    $fraud = $notification->fraud_status;
+
+    $order = Order::where('order_number', $order_id)->first();
+
+    if ($order) {
+        if ($transaction == 'capture') {
+            if ($type == 'credit_card') {
+                if ($fraud == 'challenge') {
+                    $order->status = 'Pending';
+                } else {
+                    $order->status = 'Paid';
+                }
+            }
+        } else if ($transaction == 'settlement') {
+            $order->status = 'Paid';
+        } else if ($transaction == 'pending') {
+            $order->status = 'Pending';
+        } else if ($transaction == 'deny') {
+            $order->status = 'Cancelled';
+        } else if ($transaction == 'expire') {
+            $order->status = 'Cancelled';
+        } else if ($transaction == 'cancel') {
+            $order->status = 'Cancelled';
+        }
+        $order->save();
+    }
+
+    return response()->json(['status' => 'success']);
+})->name('midtrans.callback');
 
 Route::get('/pelanggan/beranda', function () { return view('pelanggan.beranda'); });
 Route::get('/pelanggan/keranjang', function () { return view('pelanggan.keranjang'); });

@@ -16,18 +16,13 @@
         .step-number { background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%); }
     </style>
     <script>
-        function handleFile(input) {
+        function enableButton() {
             const btn = document.getElementById('btnSubmit');
-            const file = input.files[0];
-            const text = document.getElementById('uploadText');
-            if (file) {
-                text.innerText = file.name;
-                text.classList.add('text-indigo-600');
-                btn.classList.remove('bg-slate-200', 'text-slate-400', 'cursor-not-allowed');
-                btn.classList.add('bg-indigo-600', 'text-white', 'hover:bg-indigo-700', 'shadow-xl', 'shadow-indigo-100');
-                btn.removeAttribute('disabled');
-            }
+            btn.classList.remove('bg-slate-200', 'text-slate-400', 'cursor-not-allowed');
+            btn.classList.add('bg-indigo-600', 'text-white', 'hover:bg-indigo-700', 'shadow-xl', 'shadow-indigo-100');
+            btn.removeAttribute('disabled');
         }
+        window.onload = enableButton;
     </script>
 </head>
 <body class="text-[#1E293B] pb-24">
@@ -66,80 +61,63 @@
 
     <main class="max-w-[1280px] mx-auto px-6 py-12">
         <header class="mb-12">
-            <h1 class="text-[36px] font-black text-indigo-950 tracking-tighter mb-3 leading-none">Konfirmasi Pembayaran</h1>
-            <p class="text-slate-400 font-bold text-[14px] uppercase tracking-widest">Unggah Bukti Transfer untuk Memulai Pemrosesan</p>
+            <h1 class="text-[36px] font-black text-indigo-950 tracking-tighter mb-3 leading-none">Konfirmasi Pesanan</h1>
+            <p class="text-slate-400 font-bold text-[14px] uppercase tracking-widest">Tinjau Pesanan Anda Sebelum Membayar</p>
         </header>
 
-        <form action="{{ url('/pelanggan/konfirmasi-pembayaran') }}" method="POST" enctype="multipart/form-data">
+        @if(session('error'))
+        <div class="mb-8 p-6 bg-red-50 border border-red-100 rounded-[24px] flex items-center gap-4 text-red-600">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
+            </svg>
+            <p class="font-bold text-[14px]">{{ session('error') }}</p>
+        </div>
+        @endif
+
+        <form action="{{ url('/pelanggan/konfirmasi-pembayaran') }}" method="POST">
             @csrf
             <div class="flex flex-col xl:flex-row gap-12">
-                <!-- Left Column: Instructions -->
                 <div class="flex-grow space-y-8">
                     <div class="bg-white p-10 rounded-[48px] border border-slate-100 shadow-sm overflow-hidden relative">
                         <div class="absolute -right-20 -top-20 w-64 h-64 bg-indigo-50 rounded-full blur-[100px] opacity-40"></div>
                         
                         <div class="relative z-10">
-                            <h3 class="text-[20px] font-black text-indigo-950 mb-8 tracking-tight">Metode Transfer Bank</h3>
+                            <h3 class="text-[20px] font-black text-indigo-950 mb-8 tracking-tight">Metode Pembayaran Otomatis</h3>
                             
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
                                 <div class="payment-card p-8 rounded-[32px] border-2 border-indigo-600 bg-indigo-50/30 relative overflow-hidden group">
                                     <div class="absolute top-4 right-6 text-indigo-600">
                                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6"><path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm13.36-1.814a.75.75 0 1 0-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 0 0-1.06 1.06l2.25 2.25a.75.75 0 0 0 1.14-.094l3.75-5.25Z" clip-rule="evenodd" /></svg>
                                     </div>
-                                    <p class="text-[11px] font-black text-indigo-400 uppercase tracking-[0.2em] mb-4">Transfer BCA</p>
-                                    <p class="text-[26px] font-black text-indigo-950 tracking-tight leading-none mb-1">8691888122</p>
-                                    <p class="text-[14px] font-bold text-slate-500">A/N CV ARYA DUTA</p>
-                                    <div class="mt-6 flex items-center gap-2 text-[12px] font-black text-indigo-600 uppercase cursor-pointer group-hover:translate-x-1 transition-transform">
-                                        Salin No. Rekening
-                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-3 h-3"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 0 1-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 0 1 1.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 0 0-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 0 1-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 0 0-3.375-3.375h-1.5a1.125 1.125 0 0 1-1.125-1.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H9.75" /></svg>
-                                    </div>
+                                    <p class="text-[11px] font-black text-indigo-400 uppercase tracking-[0.2em] mb-4">Midtrans Payment</p>
+                                    <p class="text-[20px] font-black text-indigo-950 tracking-tight leading-none mb-1">Multi Payment Gateway</p>
+                                    <p class="text-[13px] font-bold text-slate-500 mt-2">Dukung VA, GoPay, OVO, & Kartu Kredit</p>
                                 </div>
                             </div>
 
                             <div class="space-y-6 mb-12">
                                 <h4 class="text-[14px] font-black text-indigo-950 uppercase tracking-widest flex items-center gap-3">
                                     <span class="w-1.5 h-6 bg-indigo-600 rounded-full"></span>
-                                    Instruksi Pembayaran
+                                    Cara Pembayaran
                                 </h4>
                                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                     <div class="flex items-start gap-4 p-5 rounded-3xl bg-slate-50 border border-slate-100">
                                         <div class="step-number w-8 h-8 rounded-xl text-white flex items-center justify-center font-black text-[14px] shrink-0 shadow-lg shadow-indigo-100">1</div>
-                                        <p class="text-[13px] font-bold text-slate-600 leading-relaxed">Transfer sesuai total nominal hingga digit terakhir.</p>
+                                        <p class="text-[13px] font-bold text-slate-600 leading-relaxed">Klik tombol bayar di sebelah kanan.</p>
                                     </div>
                                     <div class="flex items-start gap-4 p-5 rounded-3xl bg-slate-50 border border-slate-100">
                                         <div class="step-number w-8 h-8 rounded-xl text-white flex items-center justify-center font-black text-[14px] shrink-0 shadow-lg shadow-indigo-100">2</div>
-                                        <p class="text-[13px] font-bold text-slate-600 leading-relaxed">Pastikan nama penerima adalah CV ARYA DUTA.</p>
+                                        <p class="text-[13px] font-bold text-slate-600 leading-relaxed">Pilih metode pembayaran favorit Anda.</p>
                                     </div>
                                     <div class="flex items-start gap-4 p-5 rounded-3xl bg-slate-50 border border-slate-100">
                                         <div class="step-number w-8 h-8 rounded-xl text-white flex items-center justify-center font-black text-[14px] shrink-0 shadow-lg shadow-indigo-100">3</div>
-                                        <p class="text-[13px] font-bold text-slate-600 leading-relaxed">Simpan bukti transfer dalam format foto/screenshot.</p>
+                                        <p class="text-[13px] font-bold text-slate-600 leading-relaxed">Selesaikan transaksi di aplikasi bank/e-wallet.</p>
                                     </div>
                                     <div class="flex items-start gap-4 p-5 rounded-3xl bg-slate-50 border border-slate-100">
                                         <div class="step-number w-8 h-8 rounded-xl text-white flex items-center justify-center font-black text-[14px] shrink-0 shadow-lg shadow-indigo-100">4</div>
-                                        <p class="text-[13px] font-bold text-slate-600 leading-relaxed">Unggah file pada kolom yang tersedia di bawah.</p>
+                                        <p class="text-[13px] font-bold text-slate-600 leading-relaxed">Status pesanan akan otomatis terupdate.</p>
                                     </div>
                                 </div>
-                            </div>
-
-                            <!-- Upload Area -->
-                            <div class="p-1 w-full bg-slate-100 rounded-[36px] overflow-hidden">
-                                <label class="block w-full bg-white border-4 border-dashed border-slate-200 rounded-[32px] p-12 text-center cursor-pointer hover:border-indigo-400 hover:bg-indigo-50/30 transition-all group">
-                                    <input type="file" name="payment_proof" class="hidden" onchange="handleFile(this)" required>
-                                    <div class="flex flex-col items-center">
-                                        <div class="w-20 h-20 bg-indigo-50 text-indigo-600 rounded-[24px] flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-500 shadow-sm border border-indigo-100">
-                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-10 h-10"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0 7.5 7.5M12 3v13.5" /></svg>
-                                        </div>
-                                        <span class="text-[18px] font-black text-indigo-950 tracking-tight" id="uploadText">Unggah Bukti Pembayaran</span>
-                                        <p class="text-[13px] font-bold text-slate-400 mt-2">Seret & lepas file di sini, atau klik untuk memilih file</p>
-                                        <div class="mt-8 flex items-center gap-4 text-[11px] font-black text-indigo-400 uppercase tracking-widest">
-                                            <span>JPG</span>
-                                            <div class="w-1 h-1 bg-slate-200 rounded-full"></div>
-                                            <span>PNG</span>
-                                            <div class="w-1 h-1 bg-slate-200 rounded-full"></div>
-                                            <span>PDF (MAKS 2MB)</span>
-                                        </div>
-                                    </div>
-                                </label>
                             </div>
                         </div>
                     </div>
@@ -184,11 +162,11 @@
                             </p>
                         </div>
 
-                        <button type="submit" id="btnSubmit" class="w-full flex items-center justify-center gap-3 bg-slate-200 text-slate-400 py-5 rounded-[24px] text-[16px] font-black transition-all cursor-not-allowed group" disabled>
-                            Selesaikan Pembayaran
+                        <button type="submit" id="btnSubmit" class="w-full flex items-center justify-center gap-3 bg-indigo-600 text-white py-5 rounded-[24px] text-[16px] font-black hover:bg-indigo-700 transition-all shadow-xl shadow-indigo-100 group">
+                            Bayar Sekarang
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" class="w-5 h-5 group-hover:translate-x-1 transition-transform"><path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" /></svg>
                         </button>
-                        <p class="text-[11px] text-center text-slate-400 font-bold mt-6 italic">Pastikan bukti transfer yang Anda unggah terlihat jelas dan terbaca oleh sistem.</p>
+                        <p class="text-[11px] text-center text-slate-400 font-bold mt-6 italic">Anda akan diarahkan ke halaman pembayaran aman Midtrans.</p>
                     </div>
                 </div>
             </div>
