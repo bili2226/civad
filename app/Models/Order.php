@@ -17,6 +17,14 @@ class Order extends Model
         'payment_proof',
         'rejection_reason',
         'snap_token',
+        'recipient_name',
+        'phone_number',
+        'address',
+        'latitude',
+        'longitude',
+        'distance_km',
+        'shipping_cost',
+        'points_awarded',
     ];
 
     public function user(): BelongsTo

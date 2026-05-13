@@ -7,16 +7,23 @@ use App\Models\Book;
 use App\Models\Admin;
 use App\Models\Order;
 use App\Models\OrderItem;
+use App\Models\Notification;
+use App\Models\Banner;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Midtrans\Config;
 use Midtrans\Snap;
+use Midtrans\Transaction;
 
 // Landing Page
 Route::get('/', function () {
-    return view('welcome', ['dummyBooks' => Book::all()]);
+    $banners = Banner::where('is_active', true)->orderBy('order_priority', 'asc')->get();
+    return view('welcome', [
+        'dummyBooks' => Book::all(),
+        'banners' => $banners
+    ]);
 });
 
 // AUTH ROUTES
@@ -32,40 +39,45 @@ Route::post('/register', function (Request $request) {
     $request->validate([
         'name' => 'required|string|max:255',
         'username' => 'required|string|max:255|unique:users',
+        'email' => 'required|string|email|max:255|unique:users',
         'password' => 'required|string|min:4|confirmed',
     ]);
 
     User::create([
         'name' => $request->name,
         'username' => $request->username,
+        'email' => $request->email,
         'password' => Hash::make($request->password),
         'daerah' => $request->daerah,
-        'role' => 'pelanggan', // Keep for compatibility if needed, but users table is now customers only
+        'role' => 'pelanggan',
     ]);
 
     return redirect('/login')->with('success', 'Pendaftaran berhasil! Silakan login.');
 })->name('register.submit');
 
 Route::post('/login-submit', function (Request $request) {
+    $request->validate([
+        'username' => 'required|string|max:255',
+        'password' => 'required|string',
+    ]);
+
     $username = $request->input('username');
     $password = $request->input('password');
-    $role = $request->input('role');
 
-    if ($role === 'admin') {
-        $admin = Admin::where('username', $username)->first();
-        if ($admin && Hash::check($password, $admin->password)) {
-            $request->session()->put('username', $admin->name);
-            $request->session()->put('role', 'admin');
-            return redirect('/admin/dashboard')->with('success', 'Selamat datang, ' . $admin->name . '!');
-        }
-    } else {
-        // Customer login
-        if (Auth::attempt(['username' => $username, 'password' => $password])) {
-            $user = Auth::user();
-            $request->session()->put('username', $user->name);
-            $request->session()->put('role', 'pelanggan');
-            return redirect('/pelanggan/dashboard')->with('success', 'Selamat datang, ' . $user->name . '!');
-        }
+    // Check admin account first
+    $admin = Admin::where('username', $username)->first();
+    if ($admin && Hash::check($password, $admin->password)) {
+        $request->session()->put('username', $admin->name);
+        $request->session()->put('role', 'admin');
+        return redirect('/admin/dashboard')->with('success', 'Selamat datang, ' . $admin->name . '!');
+    }
+
+    // Then check customer account
+    if (Auth::attempt(['username' => $username, 'password' => $password])) {
+        $user = Auth::user();
+        $request->session()->put('username', $user->name);
+        $request->session()->put('role', 'pelanggan');
+        return redirect('/pelanggan/dashboard')->with('success', 'Selamat datang, ' . $user->name . '!');
     }
 
     return redirect()->back()->with('error', 'Username atau password salah!');
@@ -87,7 +99,7 @@ Route::get('/admin/dashboard', function () {
     $totalBukuTerjual = OrderItem::sum('quantity');
     $totalPendapatan = Order::sum('total_amount');
     $totalJenisBuku = Book::count();
-    $menungguVerifikasi = Order::where('status', 'Menunggu Verifikasi')->count();
+    $menungguVerifikasi = Order::whereIn('status', ['Menunggu Verifikasi', 'Pending'])->count();
     
     return view('admin.dashboard', [
         'totalPelanggan' => $totalPelanggan,
@@ -155,7 +167,19 @@ Route::post('/admin/pesanan/update-status', function (Request $request) {
         $order->rejection_reason = $request->input('rejection_reason');
     }
     
+    if ($request->input('status') === 'Selesai' && !$order->points_awarded) {
+        $user = $order->user;
+        if ($user) {
+            $pointsEarned = floor($order->total_amount / 10000);
+            $user->increment('points', $pointsEarned);
+            $order->points_awarded = true;
+        }
+    }
+
     $order->save();
+    
+    // Notify Customer about status update
+    Notification::send('pelanggan', 'Status Pesanan Diperbarui', 'Pesanan #' . $order->order_number . ' Anda kini berstatus: ' . $order->status, $order->user_id, 'info', '/pelanggan/riwayat');
     
     return redirect()->back()->with('success', 'Status pesanan #' . $order->order_number . ' berhasil diubah menjadi ' . $order->status);
 });
@@ -214,6 +238,48 @@ Route::post('/admin/buku/delete', function (Request $request) {
     return redirect()->back()->with('success', 'Buku telah dihapus dari database!');
 });
 
+// ADMIN BANNER MANAGEMENT
+Route::get('/admin/manajemen-banner', function () {
+    if (session('role') !== 'admin') return redirect('/')->with('error', 'Akses ditolak!');
+    return view('admin.manajemen_banner', ['banners' => Banner::orderBy('order_priority', 'asc')->get()]);
+});
+
+Route::post('/admin/banner/store', function (Request $request) {
+    if (session('role') !== 'admin') return redirect('/')->with('error', 'Akses ditolak!');
+    
+    Banner::create([
+        'image' => $request->input('image'),
+        'link' => $request->input('link'),
+        'order_priority' => (int) $request->input('order_priority', 0),
+        'is_active' => $request->has('is_active')
+    ]);
+    
+    return redirect()->back()->with('success', 'Banner baru berhasil ditambahkan!');
+});
+
+Route::post('/admin/banner/update', function (Request $request) {
+    if (session('role') !== 'admin') return redirect('/')->with('error', 'Akses ditolak!');
+    
+    $banner = Banner::findOrFail($request->input('id'));
+    $banner->update([
+        'image' => $request->input('image'),
+        'link' => $request->input('link'),
+        'order_priority' => (int) $request->input('order_priority', 0),
+        'is_active' => $request->has('is_active')
+    ]);
+    
+    return redirect()->back()->with('success', 'Banner berhasil diperbarui!');
+});
+
+Route::post('/admin/banner/delete', function (Request $request) {
+    if (session('role') !== 'admin') return redirect('/')->with('error', 'Akses ditolak!');
+    
+    $banner = Banner::findOrFail($request->input('id'));
+    $banner->delete();
+    
+    return redirect()->back()->with('success', 'Banner berhasil dihapus!');
+});
+
 // CUSTOMER ROUTES
 Route::get('/pelanggan/dashboard', function () {
     if (session('role') !== 'pelanggan') return redirect('/')->with('error', 'Akses ditolak!');
@@ -237,18 +303,70 @@ Route::post('/pelanggan/keranjang/tambah', function (Request $request) {
             'id' => $book->id,
             'title' => $book->title,
             'price' => $book->base_price,
-            'image' => $book->image,
             'category' => $book->category,
             'class' => $book->class,
+            'image' => $book->image,
             'qty' => $qtyToAdd
         ];
     }
     session(['cart' => $cart]);
     
-    $totalQty = collect($cart)->sum('qty');
-    session(['cart_count' => $totalQty]);
+    session(['cart_count' => count($cart)]);
     
-    return redirect('/pelanggan/dashboard')->with('success', 'Buku berhasil ditambahkan ke keranjang!');
+    return redirect()->back()->with('success', $book->title . ' berhasil ditambahkan ke keranjang!');
+});
+
+Route::post('/pelanggan/beli-sekarang', function (Request $request) {
+    $book = Book::findOrFail($request->input('buku_id'));
+    $qtyToAdd = (int) $request->input('qty', 1);
+
+    $cart = session('cart', []);
+    if (isset($cart[$book->id])) {
+        $cart[$book->id]['qty'] += $qtyToAdd;
+    } else {
+        $cart[$book->id] = [
+            'id' => $book->id,
+            'title' => $book->title,
+            'price' => $book->base_price,
+            'category' => $book->category,
+            'class' => $book->class,
+            'image' => $book->image,
+            'qty' => $qtyToAdd
+        ];
+    }
+    session(['cart' => $cart]);
+    session(['cart_count' => count($cart)]);
+    
+    return redirect('/pelanggan/pesanan');
+});
+
+Route::post('/pelanggan/keranjang/hapus', function (Request $request) {
+    $cart = session('cart', []);
+    $id = $request->input('id');
+    
+    if (isset($cart[$id])) {
+        unset($cart[$id]);
+        session(['cart' => $cart]);
+        
+        session(['cart_count' => count($cart)]);
+    }
+    
+    return redirect()->back()->with('success', 'Buku berhasil dihapus dari keranjang!');
+});
+
+Route::post('/pelanggan/keranjang/update', function (Request $request) {
+    $cart = session('cart', []);
+    $id = $request->input('id');
+    $qty = (int) $request->input('qty');
+    
+    if (isset($cart[$id]) && $qty > 0) {
+        $cart[$id]['qty'] = $qty;
+        session(['cart' => $cart]);
+        
+        session(['cart_count' => count($cart)]);
+    }
+    
+    return response()->json(['success' => true]);
 });
 
 Route::post('/pelanggan/konfirmasi-pembayaran', function (Request $request) {
@@ -260,8 +378,11 @@ Route::post('/pelanggan/konfirmasi-pembayaran', function (Request $request) {
 
     $orderNumber = 'ORD-' . strtoupper(Str::random(8));
     $subtotal = collect($cart)->sum(fn($i) => $i['price'] * $i['qty']);
-    $shipping = 8400;
-    $total = $subtotal + $shipping;
+    $distanceKm = (int) $request->input('distance_km', 3);
+    $shipping = $distanceKm * 2800;
+    
+    $discount = session('active_discount', 0);
+    $total = max(0, $subtotal + $shipping - $discount);
 
     // Konfigurasi Midtrans
     Config::$serverKey = env('MIDTRANS_SERVER_KEY');
@@ -270,13 +391,20 @@ Route::post('/pelanggan/konfirmasi-pembayaran', function (Request $request) {
     Config::$is3ds = true;
 
     $order = null;
-    DB::transaction(function () use ($user, $orderNumber, $total, $cart, &$order) {
+    DB::transaction(function () use ($user, $orderNumber, $total, $cart, &$order, $request, $shipping) {
         $order = Order::create([
             'user_id' => $user->id,
             'order_number' => $orderNumber,
             'total_amount' => $total,
             'status' => 'Pending',
             'payment_method' => 'Midtrans',
+            'recipient_name' => $request->input('recipient_name'),
+            'phone_number' => $request->input('phone_number'),
+            'address' => $request->input('address'),
+            'latitude' => $request->input('latitude'),
+            'longitude' => $request->input('longitude'),
+            'distance_km' => $request->input('distance_km'),
+            'shipping_cost' => $shipping,
         ]);
 
         foreach ($cart as $item) {
@@ -314,7 +442,11 @@ Route::post('/pelanggan/konfirmasi-pembayaran', function (Request $request) {
         $order->save();
 
         session(['cart' => []]);
+        
+        // Notify Admins about new order
+        Notification::send('admin', 'Pesanan Baru #' . $orderNumber, 'Pelanggan ' . $user->name . ' baru saja melakukan pemesanan sebesar Rp ' . number_format($total, 0, ',', '.'), null, 'info', '/admin/manajemen-pesanan');
         session(['cart_count' => 0]);
+        session(['active_discount' => 0]);
 
         return view('pelanggan.pembayaran_midtrans', [
             'order' => $order,
@@ -340,16 +472,20 @@ Route::post('/midtrans/callback', function (Request $request) {
     $order = Order::where('order_number', $order_id)->first();
 
     if ($order) {
-        if ($transaction == 'capture') {
-            if ($type == 'credit_card') {
-                if ($fraud == 'challenge') {
-                    $order->status = 'Pending';
-                } else {
-                    $order->status = 'Paid';
-                }
+        if ($transaction == 'settlement' || ($transaction == 'capture' && $fraud !== 'challenge')) {
+            $order->status = 'Pesanan Sedang Dikemas';
+            
+            // Award points to user if not already awarded
+            $user = $order->user;
+            if ($user && !$order->points_awarded) {
+                // 1 Point for every 10,000 IDR
+                $pointsEarned = floor($order->total_amount / 10000);
+                $user->increment('points', $pointsEarned);
+                $order->points_awarded = true;
+
+                // Notify Customer
+                Notification::send('pelanggan', 'Pembayaran Berhasil!', 'Pembayaran untuk pesanan #' . $order->order_number . ' telah kami terima. Anda mendapatkan ' . $pointsEarned . ' poin loyalty!', $user->id, 'success', '/pelanggan/riwayat');
             }
-        } else if ($transaction == 'settlement') {
-            $order->status = 'Paid';
         } else if ($transaction == 'pending') {
             $order->status = 'Pending';
         } else if ($transaction == 'deny') {
@@ -365,10 +501,77 @@ Route::post('/midtrans/callback', function (Request $request) {
     return response()->json(['status' => 'success']);
 })->name('midtrans.callback');
 
+// Customer Profile
+Route::get('/pelanggan/profil', function () {
+    if (session('role') !== 'pelanggan') return redirect('/')->with('error', 'Akses ditolak!');
+    return view('pelanggan.profil', ['user' => Auth::user()]);
+});
+
+Route::post('/pelanggan/profil/update', function (Request $request) {
+    if (session('role') !== 'pelanggan') return redirect('/')->with('error', 'Akses ditolak!');
+    
+    $user = Auth::user();
+    $data = [
+        'name' => $request->name,
+        'email' => $request->email,
+        'phone' => $request->phone,
+        'address' => $request->address,
+    ];
+
+    if ($request->filled('cropped_photo')) {
+        $base64 = $request->cropped_photo;
+        $image = str_replace('data:image/png;base64,', '', $base64);
+        $image = str_replace(' ', '+', $image);
+        $imageName = 'profile_' . $user->id . '_' . time() . '.png';
+        \Illuminate\Support\Facades\Storage::disk('public')->put('profiles/' . $imageName, base64_decode($image));
+        $data['profile_photo'] = '/storage/profiles/' . $imageName;
+    } else if ($request->hasFile('profile_photo')) {
+        $path = $request->file('profile_photo')->store('profiles', 'public');
+        $data['profile_photo'] = '/storage/' . $path;
+    }
+    
+    $user->update($data);
+    return redirect()->back()->with('success', 'Profil berhasil diperbarui!');
+});
+
+// Admin Profile
+Route::get('/admin/profil', function () {
+    if (session('role') !== 'admin') return redirect('/')->with('error', 'Akses ditolak!');
+    $admin = Admin::where('username', session('username'))->first();
+    return view('admin.profil', ['admin' => $admin]);
+});
+
+Route::post('/admin/profil/update', function (Request $request) {
+    if (session('role') !== 'admin') return redirect('/')->with('error', 'Akses ditolak!');
+    
+    $admin = Admin::where('username', session('username'))->first();
+    $data = [
+        'name' => $request->name,
+        'daerah' => $request->daerah,
+    ];
+
+    if ($request->filled('cropped_photo')) {
+        $base64 = $request->cropped_photo;
+        $image = str_replace('data:image/png;base64,', '', $base64);
+        $image = str_replace(' ', '+', $image);
+        $imageName = 'admin_profile_' . $admin->id . '_' . time() . '.png';
+        \Illuminate\Support\Facades\Storage::disk('public')->put('profiles/' . $imageName, base64_decode($image));
+        $data['profile_photo'] = '/storage/profiles/' . $imageName;
+    } else if ($request->hasFile('profile_photo')) {
+        $path = $request->file('profile_photo')->store('profiles', 'public');
+        $data['profile_photo'] = '/storage/' . $path;
+    }
+    
+    $admin->update($data);
+    return redirect()->back()->with('success', 'Profil admin berhasil diperbarui!');
+});
+
 Route::get('/pelanggan/beranda', function () { return view('pelanggan.beranda'); });
 Route::get('/pelanggan/keranjang', function () { return view('pelanggan.keranjang'); });
 Route::get('/pelanggan/pesanan', function () { return view('pelanggan.pesanan'); });
-Route::get('/pelanggan/pembayaran', function () { return view('pelanggan.pembayaran'); });
+Route::match(['get', 'post'], '/pelanggan/pembayaran', function (Request $request) { 
+    return view('pelanggan.pembayaran', ['request' => $request]); 
+});
 Route::get('/pelanggan/riwayat', function () {
     if (session('role') !== 'pelanggan') return redirect('/')->with('error', 'Akses ditolak!');
     
@@ -376,9 +579,73 @@ Route::get('/pelanggan/riwayat', function () {
                    ->with('items.book')
                    ->orderBy('created_at', 'desc')
                    ->get();
+
+    // Local Test Fix: Sync status with Midtrans if still pending
+    Config::$serverKey = env('MIDTRANS_SERVER_KEY');
+    Config::$isProduction = env('MIDTRANS_IS_PRODUCTION', false);
+
+    foreach ($orders as $order) {
+        if ($order->status === 'Pending' && $order->payment_method === 'Midtrans') {
+            try {
+                $status = Transaction::status($order->order_number);
+                if ($status->transaction_status == 'settlement' || ($status->transaction_status == 'capture' && $status->fraud_status !== 'challenge')) {
+                    $order->status = 'Pesanan Sedang Dikemas';
+                    
+                    // Award points if not already awarded
+                    $user = $order->user;
+                    if ($user && !$order->points_awarded) {
+                        $pointsEarned = floor($order->total_amount / 10000);
+                        $user->increment('points', $pointsEarned);
+                        $order->points_awarded = true;
+                        
+                        // Notify Customer
+                        Notification::send('pelanggan', 'Pembayaran Berhasil!', 'Pembayaran untuk pesanan #' . $order->order_number . ' telah kami terima. Anda mendapatkan ' . $pointsEarned . ' poin loyalty!', $user->id, 'success', '/pelanggan/riwayat');
+                    }
+                    $order->save();
+                }
+            } catch (\Exception $e) {
+                // Silently skip if order not found in Midtrans yet
+            }
+        }
+    }
+    if (request()->query('status') === 'success' || request()->query('status') === 'pending') {
+        session()->now('title', 'Pembayaran Berhasil');
+        session()->now('success', 'Pesanan akan di proses dan segera dikirim');
+    }
                    
     return view('pelanggan.riwayat', ['orders' => $orders]);
 });
+Route::post('/pelanggan/pesanan/selesai', function (Request $request) {
+    if (session('role') !== 'pelanggan') return redirect('/')->with('error', 'Akses ditolak!');
+    
+    $order = Order::where('id', $request->input('id'))
+                  ->where('user_id', Auth::id())
+                  ->firstOrFail();
+    
+    if ($order->status === 'Dikirim' || $order->status === 'Sedang Dikirim' || $order->status === 'Pesanan Sedang Dikirim') {
+        $order->status = 'Selesai';
+        
+        // Award points if not already awarded
+        if (!$order->points_awarded) {
+            $user = $order->user;
+            if ($user) {
+                $pointsEarned = floor($order->total_amount / 10000);
+                $user->increment('points', $pointsEarned);
+                $order->points_awarded = true;
+            }
+        }
+        
+        $order->save();
+
+        // Notify Admins that customer received order
+        Notification::send('admin', 'Pesanan Selesai #' . $order->order_number, 'Pelanggan ' . Auth::user()->name . ' telah mengonfirmasi penerimaan pesanan.', null, 'success', '/admin/manajemen-pesanan');
+
+        return redirect()->back()->with('success', 'Pesanan #' . $order->order_number . ' telah dikonfirmasi selesai. Terima kasih!');
+    }
+    
+    return redirect()->back()->with('error', 'Hanya pesanan yang sedang dikirim yang dapat dikonfirmasi.');
+})->name('pelanggan.pesanan.selesai');
+
 Route::get('/pelanggan/status', function () {
     if (session('role') !== 'pelanggan') return redirect('/')->with('error', 'Akses ditolak!');
     
@@ -387,4 +654,67 @@ Route::get('/pelanggan/status', function () {
                    ->get();
                    
     return view('pelanggan.status', ['orders' => $orders]);
+});
+
+// Reward Routes
+Route::get('/admin/rewards', function() {
+    if (session('role') !== 'admin') return redirect('/')->with('error', 'Akses ditolak!');
+    return view('admin.rewards', ['rewards' => App\Models\Reward::all()]);
+});
+
+Route::post('/admin/rewards/store', function(Request $request) {
+    App\Models\Reward::create($request->all());
+    return back()->with('success', 'Penawaran reward berhasil ditambahkan!');
+});
+
+Route::post('/admin/rewards/update', function(Request $request) {
+    $reward = App\Models\Reward::find($request->id);
+    $reward->update($request->all());
+    return back()->with('success', 'Penawaran reward berhasil diperbarui!');
+});
+
+Route::post('/admin/rewards/delete', function(Request $request) {
+    App\Models\Reward::find($request->id)->delete();
+    return back()->with('success', 'Penawaran reward berhasil dihapus!');
+});
+
+Route::get('/pelanggan/rewards', function() {
+    if (session('role') !== 'pelanggan') return redirect('/')->with('error', 'Akses ditolak!');
+    return view('pelanggan.rewards', ['rewards' => App\Models\Reward::orderBy('points_required', 'asc')->get()]);
+});
+
+Route::post('/pelanggan/tukar-poin', function(Request $request) {
+    if (session('role') !== 'pelanggan') return response()->json(['success' => false, 'message' => 'Akses ditolak!']);
+    
+    $user = Auth::user();
+    $reward = App\Models\Reward::find($request->input('reward_id'));
+    
+    if (!$reward || $user->points < $reward->points_required) {
+        return response()->json(['success' => false, 'message' => 'Poin tidak mencukupi atau penawaran tidak valid!']);
+    }
+    
+    $user->decrement('points', $reward->points_required);
+    
+    // Store discount in session
+    $currentDiscount = session('active_discount', 0);
+    session(['active_discount' => $currentDiscount + $reward->discount_amount]);
+    
+    // Notify Customer about reward redemption
+    Notification::send('pelanggan', 'Reward Berhasil Ditukar!', 'Potongan harga Rp ' . number_format($reward->discount_amount, 0, ',', '.') . ' telah ditambahkan ke sesi Anda.', $user->id, 'success', '/pelanggan/rewards');
+    
+    return response()->json([
+        'success' => true, 
+        'message' => 'Poin berhasil ditukar! Potongan Rp ' . number_format($reward->discount_amount, 0, ',', '.') . ' akan otomatis terpakai pada pesanan Anda.'
+    ]);
+});
+
+// Notification Routes
+Route::get('/pelanggan/notifications/read-all', function() {
+    Notification::where('user_id', Auth::id())->where('role', 'pelanggan')->update(['is_read' => true]);
+    return back();
+});
+
+Route::get('/admin/notifications/read-all', function() {
+    Notification::where('role', 'admin')->update(['is_read' => true]);
+    return back();
 });

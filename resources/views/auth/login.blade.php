@@ -3,125 +3,163 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Login - CIVAD</title>
-    <!-- Fonts -->
+    <title>Login - Arya Duta</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        emerald: {
+                            50: '#f0fdf4', 100: '#dcfce7', 200: '#bbf7d0', 300: '#86efac',
+                            400: '#4ade80', 500: '#22c55e', 600: '#16a34a', 700: '#15803d',
+                            800: '#166534', 900: '#14532d', 950: '#052e16',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    },
+                }
+            }
+        }
+    </script>
     <style>
         body { font-family: 'Plus Jakarta Sans', sans-serif; }
-        .bg-mesh {
-            background-color: #ffffff;
-            background-image: radial-gradient(at 0% 0%, hsla(225, 100%, 94%, 1) 0, transparent 50%), 
-                              radial-gradient(at 100% 100%, hsla(225, 100%, 94%, 1) 0, transparent 50%);
+        .input-premium {
+            background: #f0fdf4;
+            border: 2px solid #052e16; /* Permanent Border as requested earlier */
+            transition: all 0.3s ease;
         }
-        .glass { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.3); shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.05); }
+        .input-premium:focus {
+            background: white;
+            box-shadow: 0 0 0 4px rgba(5, 46, 22, 0.1);
+            outline: none;
+        }
     </style>
 </head>
-<body class="bg-mesh min-h-screen flex items-center justify-center p-6 text-[#1E293B]">
-    
-    <div class="glass max-w-[440px] w-full rounded-[32px] p-10 shadow-2xl relative overflow-hidden">
-        <!-- Abstract Decorations -->
-        <div class="absolute -top-10 -right-10 w-32 h-32 bg-indigo-100 rounded-full blur-3xl opacity-50"></div>
-        <div class="absolute -bottom-10 -left-10 w-32 h-32 bg-blue-100 rounded-full blur-3xl opacity-50"></div>
+<body class="min-h-screen flex text-emerald-950 overflow-x-hidden bg-white">
 
-        <!-- Logo Section -->
-        <div class="relative z-10 text-center mb-10">
-            <div class="w-[64px] h-[64px] bg-indigo-600 text-white rounded-[20px] flex items-center justify-center mx-auto mb-6 shadow-xl shadow-indigo-200">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-8 h-8">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25" />
-                </svg>
-            </div>
-            <h1 class="text-[28px] font-extrabold text-indigo-950 tracking-tight leading-none mb-2">Selamat Datang</h1>
-            <p class="text-[14px] text-slate-500 font-medium">Silakan masuk ke akun CIVAD Anda</p>
-        </div>
+    <!-- Left Panel: Large Visual Section -->
+    <div class="hidden lg:flex lg:w-3/5 relative overflow-hidden bg-emerald-950">
+        <img src="https://images.unsplash.com/photo-1481627834876-b7833e8f5570?q=80&w=2028&auto=format&fit=crop" 
+             class="absolute inset-0 w-full h-full object-cover opacity-25 mix-blend-luminosity" alt="Library">
+        <div class="absolute inset-0 bg-gradient-to-tr from-emerald-950 via-emerald-950/80 to-transparent"></div>
+        <div class="absolute -bottom-24 -left-24 w-96 h-96 bg-emerald-500/20 rounded-full blur-[120px]"></div>
 
-        @if(session('error'))
-        <div class="mb-6 p-4 bg-red-50 border border-red-100 text-red-600 text-[13px] rounded-2xl font-bold flex items-center gap-3 animate-in fade-in zoom-in duration-300">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 flex-shrink-0"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z" /></svg>
-            {{ session('error') }}
-        </div>
-        @endif
-
-        @if(session('success'))
-        <div class="mb-6 p-4 bg-emerald-50 border border-emerald-100 text-emerald-600 text-[13px] rounded-2xl font-bold flex items-center gap-3 animate-in fade-in zoom-in duration-300">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 flex-shrink-0"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-            {{ session('success') }}
-        </div>
-        @endif
-
-        <!-- Role Toggle -->
-        <div class="mb-8 relative z-10">
-            <div class="p-1 bg-slate-100 rounded-2xl flex gap-1">
-                <button type="button" id="btn-pelanggan" onclick="setRole('pelanggan')" class="flex-1 py-2.5 rounded-[14px] text-[13px] font-bold transition-all duration-300 flex items-center justify-center gap-2 bg-white text-indigo-600 shadow-sm border border-slate-200">
-                    Pelanggan
-                </button>
-                <button type="button" id="btn-admin" onclick="setRole('admin')" class="flex-1 py-2.5 rounded-[14px] text-[13px] font-bold transition-all duration-300 flex items-center justify-center gap-2 text-slate-500 hover:text-indigo-600">
-                    Admin
-                </button>
-            </div>
-        </div>
-
-        <form action="{{ route('login.submit') }}" method="POST" class="relative z-10 space-y-5">
-            @csrf
-            <input type="hidden" name="role" id="role-input" value="pelanggan">
-            
-            <div class="space-y-2">
-                <label class="text-[13px] font-bold text-slate-700 ml-1">Username</label>
-                <div class="relative group">
-                    <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400 group-focus-within:text-indigo-600 transition-colors">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" /></svg>
-                    </div>
-                    <input type="text" name="username" placeholder="Masukkan username" required class="w-full pl-12 pr-4 py-3.5 bg-white/50 border border-slate-200 rounded-[18px] text-[14px] text-slate-900 focus:outline-none focus:border-indigo-600 focus:ring-4 focus:ring-indigo-50 transition-all placeholder:text-slate-400">
+        <div class="relative z-10 flex flex-col justify-between p-20 w-full h-full">
+            <div class="flex items-center gap-5">
+                <div class="bg-white p-2.5 rounded-2xl shadow-2xl border border-emerald-800/30">
+                    <img src="{{ asset('logo.jpg') }}" alt="Logo AD" class="h-12 w-auto">
+                </div>
+                <div class="flex flex-col">
+                    <span class="text-white font-black text-3xl tracking-tighter leading-none">Arya Duta</span>
+                    <span class="text-emerald-400 font-bold text-[10px] uppercase tracking-[0.4em] mt-1.5">Official Platform</span>
                 </div>
             </div>
 
-            <div class="space-y-2">
-                <label class="text-[13px] font-bold text-slate-700 ml-1">Kata Sandi</label>
-                <div class="relative group">
-                    <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400 group-focus-within:text-indigo-600 transition-colors">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5"><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z" /></svg>
-                    </div>
-                    <input type="password" name="password" placeholder="••••••••" required class="w-full pl-12 pr-4 py-3.5 bg-white/50 border border-slate-200 rounded-[18px] text-[14px] text-slate-900 focus:outline-none focus:border-indigo-600 focus:ring-4 focus:ring-indigo-50 transition-all placeholder:text-slate-400">
+            <div class="max-w-xl">
+                <div class="mb-10 inline-flex items-center gap-2 px-5 py-2 bg-white/10 backdrop-blur-md border border-white/10 rounded-full text-emerald-400 text-[11px] font-black uppercase tracking-[0.2em]">
+                    <span class="w-2.5 h-2.5 bg-emerald-400 rounded-full animate-pulse shadow-[0_0_10px_#4ade80]"></span>
+                    Premium Education Since 1998
+                </div>
+                <h2 class="text-6xl font-black text-white leading-[1.1] tracking-tighter mb-10 font-serif">
+                    Gerbang Menuju <br><span class="italic text-emerald-400">Pengetahuan</span> Tanpa Batas.
+                </h2>
+                <div class="relative pl-12 border-l-4 border-emerald-500/40">
+                    <p class="text-2xl text-emerald-100 font-medium italic leading-relaxed mb-6">
+                        "Membaca adalah alat paling dasar untuk meraih kehidupan yang baik."
+                    </p>
+                    <cite class="text-emerald-400 font-black text-sm uppercase tracking-[0.25em] block">— Joseph Addison</cite>
                 </div>
             </div>
 
-            <button type="submit" class="w-full bg-indigo-600 text-white py-4 rounded-[18px] font-bold text-[15px] shadow-xl shadow-indigo-100 hover:bg-indigo-700 hover:shadow-indigo-200 transition-all duration-300 active:scale-95">
-                Masuk ke Akun
-            </button>
-        </form>
+            <div class="flex items-center gap-16">
+                <div>
+                    <span class="text-white font-black text-3xl tracking-tight block">25+</span>
+                    <span class="text-emerald-400 font-bold text-[10px] uppercase tracking-widest opacity-80">Tahun Melayani</span>
+                </div>
+                <div class="h-12 w-px bg-white/10"></div>
+                <div>
+                    <span class="text-white font-black text-3xl tracking-tight block">10k+</span>
+                    <span class="text-emerald-400 font-bold text-[10px] uppercase tracking-widest opacity-80">Mitra Sekolah</span>
+                </div>
+            </div>
+        </div>
+    </div>
 
-        <div class="relative z-10 mt-8 text-center">
-            <p class="text-[14px] text-slate-500 font-medium">
-                Belum punya akun? <a href="{{ url('/register') }}" class="text-indigo-600 font-bold hover:underline">Daftar sekarang</a>
-            </p>
+    <!-- Right Panel: Login Form -->
+    <div class="w-full lg:w-2/5 flex flex-col justify-center items-center p-8 lg:p-20 relative bg-white">
+        <div class="w-full max-w-[440px]">
+            <div class="mb-12">
+                <h1 class="text-4xl font-black text-emerald-950 tracking-tight mb-3">Selamat Datang</h1>
+                <p class="text-emerald-950 font-medium opacity-70">Masuk ke akun Arya Duta Anda.</p>
+            </div>
+
+            @if(session('error'))
+            <div class="mb-8 p-4 bg-red-50 border border-red-100 text-red-600 text-[13px] rounded-2xl font-bold flex items-center gap-3 animate-in fade-in slide-in-from-top-2">
+                {{ session('error') }}
+            </div>
+            @endif
+
+            <form action="{{ route('login.submit') }}" method="POST" class="space-y-6">
+                @csrf
+                <div class="space-y-2">
+                    <label class="text-[12px] font-black text-emerald-950 uppercase tracking-[0.2em] ml-2">Username Pengguna</label>
+                    <div class="relative group">
+                        <div class="absolute inset-y-0 left-0 pl-6 flex items-center pointer-events-none text-emerald-950/30 group-focus-within:text-emerald-950 transition-colors">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-5 h-5"><path stroke-linecap="round" stroke-linejoin="round" d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" /></svg>
+                        </div>
+                        <input type="text" name="username" placeholder="Masukkan username" required class="w-full pl-16 pr-6 py-5 input-premium rounded-[28px] text-[16px] font-bold text-emerald-950">
+                    </div>
+                </div>
+
+                <div class="space-y-2">
+                    <div class="flex justify-between items-center px-2">
+                        <label class="text-[12px] font-black text-emerald-950 uppercase tracking-[0.2em]">Kata Sandi</label>
+                    </div>
+                    <div class="relative group">
+                        <div class="absolute inset-y-0 left-0 pl-6 flex items-center pointer-events-none text-emerald-950/30 group-focus-within:text-emerald-950 transition-colors">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-5 h-5"><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z" /></svg>
+                        </div>
+                        <input type="password" id="password" name="password" placeholder="••••••••" required class="w-full pl-16 pr-16 py-5 input-premium rounded-[28px] text-[16px] font-bold text-emerald-950">
+                        <button type="button" onclick="togglePassword()" class="absolute inset-y-0 right-0 pr-6 flex items-center text-emerald-950/30">
+                            <svg id="eye-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-5 h-5"><path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" /><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" /></svg>
+                        </button>
+                    </div>
+                </div>
+
+                <button type="submit" class="w-full bg-emerald-950 text-white py-6 rounded-[28px] font-black text-[18px] shadow-2xl shadow-emerald-950/30 hover:bg-emerald-900 transition-all duration-500 active:scale-[0.97] flex items-center justify-center gap-4 group">
+                    Masuk Sekarang
+                </button>
+            </form>
+
+            <div class="mt-12 text-center">
+                <p class="text-[15px] text-emerald-950 font-bold opacity-60">
+                    Belum bergabung? 
+                    <a href="{{ url('/register') }}" class="text-emerald-950 font-black hover:underline underline-offset-8 decoration-emerald-300 ml-2">
+                        Daftar Gratis
+                    </a>
+                </p>
+            </div>
         </div>
     </div>
 
     <script>
-        function setRole(role) {
-            document.getElementById('role-input').value = role;
-            const btnPelanggan = document.getElementById('btn-pelanggan');
-            const btnAdmin = document.getElementById('btn-admin');
-
-            if (role === 'pelanggan') {
-                btnPelanggan.className = "flex-1 py-2.5 rounded-[14px] text-[13px] font-bold transition-all duration-300 flex items-center justify-center gap-2 bg-white text-indigo-600 shadow-sm border border-slate-200";
-                btnAdmin.className = "flex-1 py-2.5 rounded-[14px] text-[13px] font-bold transition-all duration-300 flex items-center justify-center gap-2 text-slate-500 hover:text-indigo-600";
+        function togglePassword() {
+            const pass = document.getElementById('password');
+            const icon = document.getElementById('eye-icon');
+            if (pass.type === 'password') {
+                pass.type = 'text';
+                icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" d="M3.98 8.223A10.477 10.477 0 0 0 1.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.451 10.451 0 0 1 12 4.5c4.756 0 8.773 3.162 10.065 7.498a10.522 10.522 0 0 1-4.293 5.774M6.228 6.228 3 3m3.228 3.228 3.65 3.65m7.894 7.894L21 21m-3.228-3.228-3.65-3.65m0 0a3 3 0 1 0-4.243-4.243m4.242 4.242L9.88 9.88" />';
             } else {
-                btnAdmin.className = "flex-1 py-2.5 rounded-[14px] text-[13px] font-bold transition-all duration-300 flex items-center justify-center gap-2 bg-white text-indigo-600 shadow-sm border border-slate-200";
-                btnPelanggan.className = "flex-1 py-2.5 rounded-[14px] text-[13px] font-bold transition-all duration-300 flex items-center justify-center gap-2 text-slate-500 hover:text-indigo-600";
+                pass.type = 'password';
+                icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" /><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />';
             }
         }
-
-        // Handle role from query parameter
-        window.addEventListener('DOMContentLoaded', () => {
-            const urlParams = new URLSearchParams(window.location.search);
-            const role = urlParams.get('role');
-            if (role === 'admin' || role === 'pelanggan') {
-                setRole(role);
-            }
-        });
     </script>
 </body>
 </html>

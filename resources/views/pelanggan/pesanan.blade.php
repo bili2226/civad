@@ -1,22 +1,165 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Checkout Pesanan - CIVAD</title>
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <script src="https://cdn.tailwindcss.com"></script>
+@extends('layouts.customer_premium')
+
+@section('title', 'Checkout Pesanan')
+
+@section('scripts')
+    <!-- Leaflet Maps CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+    
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    
     <style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #F8FAFC; }
-        .glass-nav { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(12px); }
-        .form-card { transition: all 0.3s ease; }
-        .input-premium { transition: all 0.3s ease; border: 1px solid #f1f5f9; background: #f8fafc; }
-        .input-premium:focus { border-color: #6366f1; background: #fff; box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.05); }
+        #map { height: 400px; width: 100%; border-radius: 32px; border: 2px solid #064e3b; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
+        .leaflet-container { font-family: 'Plus Jakarta Sans', sans-serif; }
+        
+        @keyframes pulse-emerald {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.02); color: #059669; }
+            100% { transform: scale(1); }
+        }
+        .animate-update { animation: pulse-emerald 0.3s ease-in-out; }
+        
+        .premium-shadow { box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05); }
+        
+        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: rgba(255,255,255,0.05); }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 10px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.3); }
     </style>
+
     <script>
+        let map, marker;
+        const GUDANG_COORDS = [-6.1754, 106.8272]; // Monas Area as example warehouse
+
+        function initMap() {
+            map = L.map('map').setView(GUDANG_COORDS, 13);
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; OpenStreetMap contributors'
+            }).addTo(map);
+
+            // Warehouse marker
+            L.marker(GUDANG_COORDS).addTo(map)
+                .bindPopup('<b>Gudang Arya Duta</b><br>Titik Pengiriman Utama').openPopup();
+
+            map.on('click', function(e) {
+                setMarker(e.latlng);
+            });
+        }
+
+        function setMarker(latlng) {
+            if (marker) {
+                marker.setLatLng(latlng);
+            } else {
+                marker = L.marker(latlng, {draggable: true}).addTo(map);
+                marker.on('dragend', function(event) {
+                    setMarker(event.target.getLatLng());
+                });
+            }
+            
+            // Save to hidden inputs
+            document.getElementById('lat_input').value = latlng.lat;
+            document.getElementById('lng_input').value = latlng.lng;
+
+            // Calculate distance
+            let distance = map.distance(latlng, GUDANG_COORDS) / 1000;
+            let roundedDist = Math.max(1, Math.round(distance));
+            
+            let select = document.getElementById('jarak');
+            let found = false;
+            for (let i = 0; i < select.options.length; i++) {
+                if (parseInt(select.options[i].value) === roundedDist) {
+                    select.selectedIndex = i;
+                    found = true;
+                    break;
+                }
+            }
+            if(!found) select.selectedIndex = select.options.length - 1;
+            
+            updateSummary();
+
+            fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${latlng.lat}&lon=${latlng.lng}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.display_name) {
+                        document.getElementById('alamat_lengkap').value = data.display_name;
+                    }
+                });
+            
+            map.panTo(latlng);
+        }
+
+        function useCurrentLocation() {
+            const btn = document.getElementById('btn-geo');
+            btn.innerHTML = '<svg class="animate-spin h-4 w-4 mr-2" viewBox="0 0 24 24">...</svg> Mencari...';
+            btn.disabled = true;
+
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        const latlng = {
+                            lat: position.coords.latitude,
+                            lng: position.coords.longitude
+                        };
+                        setMarker(latlng);
+                        btn.innerHTML = 'Lokasi Berhasil Ditemukan';
+                        btn.classList.replace('bg-emerald-600', 'bg-blue-600');
+                        setTimeout(() => {
+                            btn.innerHTML = 'Gunakan Lokasi Saat Ini';
+                            btn.classList.replace('bg-blue-600', 'bg-emerald-600');
+                            btn.disabled = false;
+                        }, 3000);
+                    },
+                    (error) => {
+                        alert("Gagal mendapatkan lokasi: " + error.message);
+                        btn.innerHTML = 'Gunakan Lokasi Saat Ini';
+                        btn.disabled = false;
+                    }
+                );
+            } else {
+                alert("Browser Anda tidak mendukung geolokasi.");
+                btn.disabled = false;
+            }
+        }
+
+        function changeItemQty(id, delta) {
+            let qtyElement = document.getElementById('qty-' + id);
+            let currentQty = parseInt(qtyElement.innerText);
+            let newQty = currentQty + delta;
+            
+            if (newQty < 1) return;
+            if (newQty > 50) return; // Limit quantity
+
+            // Update UI immediately
+            qtyElement.innerText = newQty;
+            
+            // Update session via AJAX
+            fetch('{{ url("/pelanggan/keranjang/update") }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify({ id: id, qty: newQty })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Update the item subtotal in UI
+                    let subtotalElement = document.getElementById('subtotal-' + id);
+                    let price = parseInt(subtotalElement.dataset.price);
+                    subtotalElement.innerText = 'Rp ' + (price * newQty).toLocaleString('id-ID');
+                    
+                    // Visual feedback
+                    subtotalElement.classList.add('animate-update');
+                    setTimeout(() => subtotalElement.classList.remove('animate-update'), 300);
+                    
+                    // Recalculate overall summary
+                    updateSummary();
+                }
+            });
+        }
+
         function updateSummary() {
             let jarakInput = document.getElementById('jarak');
             let jarakText = jarakInput.options[jarakInput.selectedIndex].text;
@@ -24,136 +167,140 @@
             let biayaPerKm = 2800;
             let biayaPengiriman = jarak * biayaPerKm;
             
-            let totalProduk = {{ collect(session('cart', []))->sum(fn($i) => $i['price'] * $i['qty']) }};
+            // Calculate totalProduk from UI elements
+            let totalProduk = 0;
+            document.querySelectorAll('[id^="subtotal-"]').forEach(el => {
+                let price = parseInt(el.dataset.price);
+                let id = el.id.split('-')[1];
+                let qty = parseInt(document.getElementById('qty-' + id).innerText);
+                totalProduk += price * qty;
+            });
             
-            // points logic (1 point per 10k)
+            const displayTotal = document.getElementById('display_total_produk');
+            const totalBayar = document.getElementById('total_pembayaran');
+            
+            displayTotal.innerText = 'Rp ' + totalProduk.toLocaleString('id-ID');
+            
             let basePoin = Math.floor(totalProduk / 10000);
             document.getElementById('poin_didapat').innerText = basePoin + " Poin";
             
+            let diskon = {{ session('active_discount', 0) }};
+            let totalBayarNominal = Math.max(0, totalProduk + biayaPengiriman - diskon);
+            
             document.getElementById('ongkir_total').innerText = 'Rp ' + biayaPengiriman.toLocaleString('id-ID');
-            document.getElementById('total_pembayaran').innerText = 'Rp ' + (totalProduk + biayaPengiriman).toLocaleString('id-ID');
+            totalBayar.innerText = 'Rp ' + totalBayarNominal.toLocaleString('id-ID');
+            
+            // Visual feedback for totals
+            totalBayar.classList.add('animate-update');
+            setTimeout(() => totalBayar.classList.remove('animate-update'), 300);
         }
+
         window.onload = function() {
+            initMap();
             updateSummary();
         }
     </script>
-</head>
-<body class="text-[#1E293B] pb-24">
+@endsection
 
-    <!-- Navbar -->
-    <nav class="glass-nav border-b border-slate-100 sticky top-0 z-50">
-        <div class="max-w-[1280px] mx-auto px-6">
-            <div class="flex justify-between h-[88px]">
-                <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 bg-indigo-600 text-white rounded-xl flex items-center justify-center shadow-lg shadow-indigo-100">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-6 h-6">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25" />
-                        </svg>
-                    </div>
-                    <div class="flex flex-col">
-                        <span class="text-indigo-950 font-black text-[18px] leading-tight tracking-tight">CIVAD</span>
-                        <span class="text-indigo-400 font-bold text-[10px] uppercase tracking-widest leading-tight">Arya Duta</span>
-                    </div>
-                </div>
+@section('content')
 
-                <div class="hidden lg:flex items-center gap-2 text-[14px] font-bold text-slate-500">
-                    <a href="{{ url('/pelanggan/beranda') }}" class="px-5 py-2 hover:text-indigo-600 transition-colors">Beranda</a>
-                    <a href="{{ url('/pelanggan/dashboard') }}" class="px-5 py-2 hover:text-indigo-600 transition-colors">Katalog Buku</a>
-                    <a href="{{ url('/pelanggan/status') }}" class="px-5 py-2 hover:text-indigo-600 transition-colors">Status</a>
-                    <a href="{{ url('/pelanggan/riwayat') }}" class="px-5 py-2 hover:text-indigo-600 transition-colors">Riwayat</a>
-                </div>
-
-                <div class="flex items-center gap-4">
-                    <div class="hidden sm:flex items-center gap-3 bg-slate-50 px-4 py-2 rounded-2xl border border-slate-100">
-                        <p class="text-[13px] font-black text-indigo-950 leading-none">{{ session('username') ?? 'Customer' }}</p>
-                    </div>
-                    <a href="{{ url('/pelanggan/keranjang') }}" class="w-10 h-10 flex items-center justify-center text-slate-400 hover:text-indigo-600 bg-slate-50 rounded-xl transition-all relative">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993 1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007ZM8.625 10.5a.375.375 0 11-.75 0 .375.375 0 01.75 0Zm7.5 0a.375.375 0 11-.75 0 .375.375 0 01.75 0Z" /></svg>
-                    </a>
-                </div>
-            </div>
-        </div>
-    </nav>
 
     <main class="max-w-[1280px] mx-auto px-6 py-12">
         <header class="mb-12">
-            <h1 class="text-[36px] font-black text-indigo-950 tracking-tighter mb-3 leading-none">Informasi Pengiriman</h1>
-            <p class="text-slate-400 font-bold text-[14px] uppercase tracking-widest">Selesaikan Pesanan Anda dengan Detail Akurat</p>
+            <h1 class="text-[36px] font-black text-emerald-950 tracking-tighter mb-3 leading-none">Informasi Pengiriman</h1>
+            <p class="text-emerald-900 font-bold text-[14px] uppercase tracking-widest">Selesaikan Pesanan Anda dengan Detail Akurat</p>
         </header>
 
-        <div class="flex flex-col xl:flex-row gap-12">
+        <form action="{{ url('/pelanggan/pembayaran') }}" method="POST">
+            @csrf
+            <div class="flex flex-col xl:flex-row gap-12">
             <!-- Left Side: Forms -->
             <div class="flex-grow flex flex-col gap-8">
                 
                 <!-- Identitas Penerima -->
-                <div class="form-card bg-white p-8 rounded-[40px] border border-slate-100 shadow-sm">
+                <div class="form-card bg-emerald-50/30 p-8 rounded-[40px] border border-emerald-100 shadow-sm backdrop-blur-sm">
                     <div class="flex items-center gap-4 mb-10">
-                        <div class="w-12 h-12 bg-indigo-50 text-indigo-600 rounded-2xl flex items-center justify-center">
+                        <div class="w-12 h-12 bg-emerald-100 text-emerald-700 rounded-2xl flex items-center justify-center">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" /></svg>
                         </div>
                         <div>
-                            <h3 class="text-[18px] font-black text-indigo-950 tracking-tight">Identitas Penerima</h3>
-                            <p class="text-[12px] font-bold text-slate-400 uppercase tracking-widest mt-0.5">Pastikan data kontak sudah benar</p>
+                            <h3 class="text-[18px] font-black text-emerald-950 tracking-tight">Identitas Penerima</h3>
+                            <p class="text-[12px] font-bold text-emerald-800 uppercase tracking-widest mt-0.5">Pastikan data kontak sudah benar</p>
                         </div>
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                         <div class="space-y-3">
                             <label class="text-[13px] font-extrabold text-slate-700 ml-1">Nama Lengkap</label>
-                            <input type="text" value="{{ session('username') ?? 'andi' }}" class="input-premium w-full px-6 py-4 rounded-2xl text-[14px] font-bold text-indigo-950 focus:outline-none">
+                            <input type="text" name="recipient_name" placeholder="Masukkan nama penerima" class="input-premium w-full px-6 py-4 rounded-2xl text-[14px] font-bold text-emerald-950 focus:outline-none" required>
                         </div>
                         <div class="space-y-3">
                             <label class="text-[13px] font-extrabold text-slate-700 ml-1">Nomor Handphone</label>
-                            <input type="text" value="081234567890" class="input-premium w-full px-6 py-4 rounded-2xl text-[14px] font-bold text-indigo-950 focus:outline-none">
+                            <input type="text" name="phone_number" placeholder="Masukkan nomor handphone" class="input-premium w-full px-6 py-4 rounded-2xl text-[14px] font-bold text-emerald-950 focus:outline-none" required>
                         </div>
                     </div>
                 </div>
 
                 <!-- Lokasi Pengiriman -->
-                <div class="form-card bg-white p-8 rounded-[40px] border border-slate-100 shadow-sm">
+                <div class="form-card bg-white p-8 rounded-[40px] border border-emerald-100 shadow-sm">
                     <div class="flex items-center gap-4 mb-10">
                         <div class="w-12 h-12 bg-amber-50 text-amber-600 rounded-2xl flex items-center justify-center">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" /></svg>
                         </div>
                         <div>
-                            <h3 class="text-[18px] font-black text-indigo-950 tracking-tight">Detail Lokasi</h3>
-                            <p class="text-[12px] font-bold text-slate-400 uppercase tracking-widest mt-0.5">Alamat lengkap & estimasi jarak</p>
+                            <h3 class="text-[18px] font-black text-emerald-950 tracking-tight">Detail Lokasi</h3>
+                            <p class="text-[12px] font-bold text-emerald-900 uppercase tracking-widest mt-0.5">Alamat lengkap & estimasi jarak</p>
                         </div>
                     </div>
 
                     <div class="space-y-8">
+                        <div class="space-y-3 mb-6">
+                            <div class="flex justify-between items-center mb-2">
+                                <label class="text-[13px] font-extrabold text-slate-700 ml-1 italic">Tentukan Titik Pengiriman pada Peta</label>
+                                <button type="button" id="btn-geo" onclick="useCurrentLocation()" class="flex items-center gap-2 px-4 py-2 bg-emerald-950 text-white text-[11px] font-black rounded-xl hover:bg-emerald-800 transition-all shadow-md">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" /></svg>
+                                    Gunakan Lokasi Saat Ini
+                                </button>
+                            </div>
+                            <div id="map" class="z-0"></div>
+                            <p class="text-[11px] font-bold text-emerald-800 mt-2 ml-1">*Klik pada peta atau gunakan tombol di atas untuk menandai lokasi Anda</p>
+                            
+                            <input type="hidden" name="latitude" id="lat_input">
+                            <input type="hidden" name="longitude" id="lng_input">
+                        </div>
+
                         <div class="space-y-3">
                             <label class="text-[13px] font-extrabold text-slate-700 ml-1">Alamat Lengkap Pengiriman</label>
-                            <textarea class="input-premium w-full px-6 py-4 rounded-[28px] text-[14px] font-bold text-indigo-950 focus:outline-none h-32 resize-none" placeholder="Masukkan alamat lengkap tujuan pengiriman...">Jl. Kedondong No. 123, Kelurahan Menteng, Jakarta Selatan</textarea>
+                            <textarea id="alamat_lengkap" name="address" class="input-premium w-full px-6 py-4 rounded-[28px] text-[14px] font-bold text-emerald-950 focus:outline-none h-32 resize-none" placeholder="Masukkan alamat lengkap tujuan pengiriman..." required></textarea>
                         </div>
                         
                         <div class="space-y-3">
                             <label class="text-[13px] font-extrabold text-slate-700 ml-1">Estimasi Jarak dari Gudang</label>
                             <div class="relative group">
-                                <select id="jarak" onchange="updateSummary()" class="input-premium w-full px-6 py-4 rounded-2xl text-[14px] font-black text-indigo-950 focus:outline-none appearance-none cursor-pointer">
+                                <select id="jarak" name="distance_km" onchange="updateSummary()" class="input-premium w-full px-6 py-4 rounded-2xl text-[14px] font-black text-emerald-950 focus:outline-none appearance-none cursor-pointer">
                                     @for($i=1; $i<=20; $i++)
                                     <option value="{{ $i }}" {{ $i == 3 ? 'selected' : '' }}>{{ $i }} km</option>
                                     @endfor
                                 </select>
-                                <div class="absolute inset-y-0 right-6 flex items-center pointer-events-none text-slate-400">
+                                <div class="absolute inset-y-0 right-6 flex items-center pointer-events-none text-emerald-900">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" /></svg>
                                 </div>
                             </div>
-                            <p class="text-[11px] font-bold text-indigo-400 mt-2 ml-1 italic">*Biaya pengiriman otomatis dihitung Rp 2.800 per KM</p>
+                            <p class="text-[11px] font-bold text-emerald-800 mt-2 ml-1 italic">*Biaya pengiriman otomatis dihitung Rp 2.800 per KM</p>
                         </div>
                     </div>
                 </div>
 
                 <!-- Reward Poin -->
-                <div class="form-card bg-indigo-950 p-8 rounded-[40px] text-white flex items-center justify-between shadow-xl relative overflow-hidden group">
+                <div class="form-card bg-emerald-950 p-8 rounded-[40px] text-white flex items-center justify-between shadow-xl relative overflow-hidden group">
                     <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-white/5 rounded-full group-hover:scale-150 transition-transform duration-700"></div>
                     <div class="flex items-center gap-6 relative z-10">
-                        <div class="w-14 h-14 bg-white/10 backdrop-blur-md rounded-2xl flex items-center justify-center border border-white/20 text-indigo-400">
+                        <div class="w-14 h-14 bg-white/10 backdrop-blur-md rounded-2xl flex items-center justify-center border border-white/20 text-emerald-400">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-7 h-7"><path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /><path stroke-linecap="round" stroke-linejoin="round" d="M15.91 11.672a.375.375 0 010 .656l-5.603 3.113a.375.375 0 01-.557-.328V8.887c0-.286.307-.466.557-.327l5.603 3.112z" /></svg>
                         </div>
                         <div>
                             <h3 class="text-[18px] font-black tracking-tight">Reward Loyalitas</h3>
-                            <p class="text-indigo-300/60 text-[12px] font-bold uppercase tracking-widest mt-0.5">Poin yang akan Anda dapatkan</p>
+                            <p class="text-emerald-800 text-[12px] font-bold uppercase tracking-widest mt-0.5">Poin yang akan Anda dapatkan</p>
                         </div>
                     </div>
                     <div id="poin_didapat" class="text-[24px] font-black text-white bg-white/10 px-6 py-3 rounded-2xl border border-white/10 shadow-inner relative z-10">
@@ -164,44 +311,74 @@
 
             <!-- Right Side: Order Summary -->
             <div class="w-full xl:w-[420px] flex-shrink-0">
-                <div class="bg-white p-10 rounded-[48px] border border-slate-100 shadow-sm sticky top-28 overflow-hidden">
-                    <h2 class="text-[22px] font-black text-indigo-950 tracking-tight mb-8">Ringkasan Pesanan</h2>
+                <div class="bg-emerald-950 p-10 rounded-[48px] border border-white/10 shadow-2xl sticky top-28 overflow-hidden group/summary">
+                    <!-- Background Decor -->
+                    <div class="absolute -right-20 -top-20 w-64 h-64 bg-emerald-600 rounded-full blur-[100px] opacity-20 group-hover/summary:opacity-30 transition-opacity"></div>
+                    <div class="absolute -left-20 -bottom-20 w-48 h-48 bg-emerald-400 rounded-full blur-[80px] opacity-10"></div>
                     
-                    <div class="space-y-5 mb-10">
-                        @foreach(session('cart', []) as $item)
-                        <div class="flex justify-between items-start gap-4">
-                            <div class="flex-grow">
-                                <p class="text-[14px] font-black text-indigo-950 line-clamp-1 leading-tight">{{ $item['title'] }}</p>
-                                <p class="text-[11px] font-bold text-slate-400 mt-1 uppercase tracking-widest">Qty: {{ $item['qty'] }} Item</p>
+                    <div class="relative z-10">
+                        <h2 class="text-[22px] font-black text-white tracking-tight mb-8 flex items-center gap-3">
+                            <div class="w-2 h-8 bg-emerald-500 rounded-full"></div>
+                            Ringkasan Pesanan
+                        </h2>
+                        
+                        <div class="space-y-4 mb-10 max-h-[300px] overflow-y-auto pr-2 custom-scrollbar">
+                            @foreach(session('cart', []) as $item)
+                            <div class="flex items-center gap-4 bg-white/5 p-4 rounded-[28px] border border-white/10 hover:bg-white/10 transition-all group">
+                                <div class="w-14 h-14 bg-white/10 rounded-2xl overflow-hidden border border-white/10 flex-shrink-0 shadow-sm group-hover:scale-105 transition-transform">
+                                    <img src="{{ $item['image'] ?? (\App\Models\Book::find($item['id'])->image ?? 'https://images.unsplash.com/photo-1543002588-bfa74002ed7e?q=80&w=800&auto=format&fit=crop') }}" class="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity">
+                                </div>
+                                <div class="flex-grow min-w-0">
+                                    <p class="text-[13px] font-black text-emerald-50 truncate leading-tight mb-2">{{ $item['title'] }}</p>
+                                    <div class="flex items-center justify-between">
+                                        <div class="flex items-center gap-3 bg-white/10 backdrop-blur-md px-2 py-1 rounded-xl border border-white/10 shadow-sm">
+                                            <button type="button" onclick="changeItemQty('{{ $item['id'] }}', -1)" class="w-6 h-6 flex items-center justify-center text-emerald-400 hover:text-white hover:bg-white/10 rounded-lg transition-all active:scale-90">
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" class="w-3 h-3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14" /></svg>
+                                            </button>
+                                            <span id="qty-{{ $item['id'] }}" class="text-[11px] font-black text-white w-4 text-center">{{ $item['qty'] }}</span>
+                                            <button type="button" onclick="changeItemQty('{{ $item['id'] }}', 1)" class="w-6 h-6 flex items-center justify-center text-emerald-400 hover:text-white hover:bg-white/10 rounded-lg transition-all active:scale-90">
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" class="w-3 h-3"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" /></svg>
+                                            </button>
+                                        </div>
+                                        <span class="text-[13px] font-black text-emerald-300 transition-all" id="subtotal-{{ $item['id'] }}" data-price="{{ $item['price'] }}">
+                                            Rp {{ number_format($item['price'] * $item['qty'], 0, ',', '.') }}
+                                        </span>
+                                    </div>
+                                </div>
                             </div>
-                            <span class="text-[14px] font-bold text-slate-600 whitespace-nowrap">Rp {{ number_format($item['price'] * $item['qty'], 0, ',', '.') }}</span>
+                            @endforeach
                         </div>
-                        @endforeach
-                    </div>
 
-                    <div class="space-y-4 pt-8 border-t border-slate-50 mb-10">
-                        <div class="flex justify-between items-center text-[14px]">
-                            <span class="font-bold text-slate-400">Total Produk</span>
-                            <span class="font-black text-indigo-950">Rp {{ number_format(collect(session('cart', []))->sum(fn($i) => $i['price'] * $i['qty']), 0, ',', '.') }}</span>
+                        <div class="space-y-4 pt-8 border-t border-white/10 mb-10">
+                            <div class="flex justify-between items-center text-[14px]">
+                                <span class="font-bold text-emerald-300/70">Total Produk</span>
+                                <span id="display_total_produk" class="font-black text-white">Rp 0</span>
+                            </div>
+                            <div class="flex justify-between items-center text-[14px]">
+                                <span class="font-bold text-emerald-300/70">Biaya Kirim</span>
+                                <span id="ongkir_total" class="font-black text-emerald-400">Rp 0</span>
+                            </div>
+                            @if(session('active_discount', 0) > 0)
+                            <div class="flex justify-between items-center text-[14px]">
+                                <span class="font-bold text-red-400">Potongan Poin</span>
+                                <span class="font-black text-red-400">- Rp {{ number_format(session('active_discount'), 0, ',', '.') }}</span>
+                            </div>
+                            @endif
                         </div>
-                        <div class="flex justify-between items-center text-[14px]">
-                            <span class="font-bold text-slate-400">Biaya Kirim</span>
-                            <span id="ongkir_total" class="font-black text-emerald-500">Rp 0</span>
+
+                        <div class="bg-white/5 backdrop-blur-md p-8 rounded-[32px] mb-10 border border-white/10 shadow-inner">
+                            <p class="text-[12px] font-bold text-emerald-400 uppercase tracking-widest mb-2 text-center">Total Pembayaran</p>
+                            <p id="total_pembayaran" class="text-[36px] font-black text-white tracking-tighter text-center leading-none">Rp 0</p>
                         </div>
-                    </div>
 
-                    <div class="bg-indigo-50 p-8 rounded-[32px] mb-10 border border-indigo-100/50">
-                        <p class="text-[12px] font-bold text-indigo-400 uppercase tracking-widest mb-2 text-center">Total Pembayaran</p>
-                        <p id="total_pembayaran" class="text-[36px] font-black text-indigo-600 tracking-tighter text-center leading-none">Rp 0</p>
+                        <button type="submit" class="w-full flex items-center justify-center gap-3 bg-emerald-500 text-emerald-950 py-5 rounded-[24px] text-[16px] font-black shadow-xl shadow-emerald-500/20 hover:bg-emerald-400 hover:scale-[1.02] transition-all active:scale-95 group">
+                            Buat Pesanan Sekarang
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" class="w-5 h-5 group-hover:translate-x-1 transition-transform"><path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" /></svg>
+                        </button>
                     </div>
-
-                    <a href="{{ url('/pelanggan/pembayaran') }}" class="w-full flex items-center justify-center gap-3 bg-indigo-600 text-white py-5 rounded-[24px] text-[16px] font-black shadow-xl shadow-indigo-100 hover:bg-indigo-700 transition-all active:scale-95 group">
-                        Buat Pesanan Sekarang
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" class="w-5 h-5 group-hover:translate-x-1 transition-transform"><path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" /></svg>
-                    </a>
                 </div>
             </div>
         </div>
+        </form>
     </main>
-</body>
-</html>
+@endsection
