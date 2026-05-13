@@ -145,7 +145,7 @@
 
             @foreach($navItems as $item)
                 @php $isActive = request()->is(ltrim($item['url'], '/')); @endphp
-                <a href="{{ url($item['url']) }}" class="flex items-center gap-6 px-10 py-6 rounded-[32px] text-[15px] font-black uppercase tracking-[0.2em] transition-all duration-500 group {{ $isActive ? 'nav-item-active' : 'text-white/60 hover:text-white hover:bg-white/10' }}">
+                <a href="{{ url($item['url']) }}" class="flex items-center gap-4 px-6 py-4 rounded-[24px] text-[12px] font-black uppercase tracking-[0.15em] transition-all duration-500 group {{ $isActive ? 'nav-item-active text-emerald-950' : 'text-white hover:text-white hover:bg-white/10' }}">
                     <div class="flex items-center justify-center w-6 h-6">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-full h-full transition-all duration-500 group-hover:scale-125 {{ $isActive ? 'text-emerald-800' : 'text-emerald-400/50 group-hover:text-emerald-400' }}">
                             {!! $item['icon'] !!}
@@ -242,11 +242,16 @@
 
                 <a href="{{ url('/admin/profil') }}" class="flex items-center gap-5 bg-white/5 px-6 py-3 rounded-[28px] border border-white/10 group hover:border-white/20 transition-all hover:bg-white/10">
                     @php
-                        $adminUser = \App\Models\Admin::where('username', session('username'))->first();
+                        $adminUser = null;
+                        if (session()->has('admin_id')) {
+                            $adminUser = \App\Models\Admin::find(session('admin_id'));
+                        } else {
+                            $adminUser = \App\Models\Admin::where('name', session('username'))->first();
+                        }
                     @endphp
                     <div class="text-right">
                         <p class="text-[14px] font-black text-white leading-none tracking-tight">{{ session('username') ?? 'Admin' }}</p>
-                        <p class="text-[10px] font-black text-emerald-400 uppercase tracking-[0.2em] mt-1.5">Authorized System Admin</p>
+                        <p class="text-[10px] font-black text-emerald-400 uppercase tracking-[0.2em] mt-1.5">Admin</p>
                     </div>
                     <div class="w-14 h-14 bg-white text-emerald-950 rounded-2xl flex items-center justify-center font-black shadow-xl border border-white uppercase text-[20px] transform group-hover:scale-105 transition-transform duration-500 overflow-hidden">
                         @if($adminUser && $adminUser->profile_photo)

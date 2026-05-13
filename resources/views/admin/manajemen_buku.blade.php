@@ -22,68 +22,88 @@
 
 @section('content')
     <!-- Search & Filter -->
-    <div class="bg-white p-6 rounded-[32px] border border-emerald-100 shadow-sm mb-10 flex gap-4 backdrop-blur-md">
+    <form action="{{ url('/admin/manajemen-buku') }}" method="GET" class="bg-white p-6 rounded-[32px] border border-emerald-100 shadow-sm mb-10 flex flex-col md:flex-row gap-4 backdrop-blur-md">
         <div class="relative flex-grow group">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-6 h-6 absolute left-6 top-1/2 -translate-y-1/2 text-emerald-900/30 group-focus-within:text-emerald-950 transition-colors"><path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" /></svg>
-            <input type="text" placeholder="Cari berdasarkan judul, penulis, atau kategori buku..." class="w-full bg-emerald-50/30 border border-emerald-100 rounded-2xl py-4.5 pl-16 pr-8 text-[15px] font-bold text-emerald-950 focus:outline-none focus:ring-4 focus:ring-emerald-500/5 focus:border-emerald-950 transition-all placeholder:text-emerald-900/30">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-6 h-6 absolute left-6 top-1/2 -translate-y-1/2 text-emerald-900/50 transition-colors"><path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" /></svg>
+            <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari berdasarkan judul atau penulis..." class="w-full bg-emerald-50/30 border-2 border-emerald-200 rounded-2xl py-4 pl-16 pr-8 text-[15px] font-bold text-emerald-950 focus:outline-none focus:border-emerald-500 transition-all placeholder:text-emerald-900/40">
         </div>
-    </div>
+        <div class="relative min-w-[240px]">
+            <select name="category" onchange="this.form.submit()" class="w-full bg-emerald-50/30 border-2 border-emerald-200 rounded-2xl py-4 pl-6 pr-12 text-[15px] font-bold text-emerald-950 focus:outline-none focus:border-emerald-500 appearance-none cursor-pointer transition-all">
+                <option value="">Semua Jenjang</option>
+                <option value="SD/MI" {{ request('category') == 'SD/MI' ? 'selected' : '' }}>SD/MI</option>
+                <option value="SMP/MTs" {{ request('category') == 'SMP/MTs' ? 'selected' : '' }}>SMP/MTs</option>
+                <option value="SMA/SMK/MA" {{ request('category') == 'SMA/SMK/MA' ? 'selected' : '' }}>SMA/SMK/MA</option>
+            </select>
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-5 h-5 absolute right-6 top-1/2 -translate-y-1/2 text-emerald-900/50 pointer-events-none"><path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" /></svg>
+        </div>
+        <button type="submit" class="bg-emerald-950 text-white px-8 py-4 rounded-2xl font-black text-[15px] hover:bg-emerald-900 shadow-xl shadow-emerald-950/20 active:scale-95 transition-all">Cari</button>
+    </form>
 
     <!-- Table Container -->
-    <div class="bg-white rounded-[48px] border border-emerald-100 shadow-sm overflow-hidden">
+    <div class="bg-white rounded-[32px] border border-emerald-100 shadow-xl shadow-emerald-900/5 overflow-hidden">
         <div class="overflow-x-auto">
             <table class="w-full text-left border-collapse">
                 <thead>
-                    <tr class="text-[11px] font-black uppercase tracking-[0.2em] text-emerald-900 bg-emerald-50/50">
-                        <th class="px-10 py-6 w-32 text-center">Sampul</th>
-                        <th class="px-10 py-6">Detail Informasi</th>
-                        <th class="px-10 py-6">Jenjang / Kelas</th>
-                        <th class="px-10 py-6 text-center">Harga Jual</th>
-                        <th class="px-10 py-6 text-center">Stok</th>
-                        <th class="px-10 py-6 text-center">Tindakan</th>
+                    <tr class="text-[12px] font-black uppercase tracking-[0.2em] text-emerald-400 bg-emerald-950">
+                        <th class="px-8 py-6 w-32 text-center">Sampul</th>
+                        <th class="px-8 py-6">Detail Informasi</th>
+                        <th class="px-8 py-6">Jenjang / Kelas</th>
+                        <th class="px-8 py-6 text-center">Harga Jual</th>
+                        <th class="px-8 py-6 text-center">Stok</th>
+                        <th class="px-8 py-6 text-center">Tindakan</th>
                     </tr>
                 </thead>
-                <tbody class="text-[14px] text-emerald-950 divide-y divide-emerald-50/50">
-                    @foreach($dummyBooks as $book)
-                    <tr class="hover:bg-emerald-50/30 transition-colors group">
-                        <td class="px-10 py-7">
-                            <div class="w-20 h-28 bg-emerald-100 rounded-2xl overflow-hidden border border-emerald-50 shadow-md group-hover:scale-105 transition-transform duration-500 mx-auto">
+                <tbody class="text-[14px] text-emerald-950 divide-y divide-emerald-50">
+                    @forelse($dummyBooks as $book)
+                    <tr class="hover:bg-emerald-50/50 transition-all group">
+                        <td class="px-8 py-6">
+                            <div class="w-20 h-28 bg-emerald-50 rounded-[16px] overflow-hidden border-2 border-white shadow-lg group-hover:scale-105 transition-transform duration-500 mx-auto">
                                 <img src="{{ $book->image }}" class="w-full h-full object-cover">
                             </div>
                         </td>
-                        <td class="px-10 py-7">
-                            <p class="font-black text-emerald-950 text-[16px] mb-1.5 leading-tight tracking-tight">{{ $book->title }}</p>
-                            <div class="flex items-center gap-2.5 text-[12px] text-emerald-700 font-black uppercase tracking-widest opacity-60">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-3.5 h-3.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" /></svg>
+                        <td class="px-8 py-6">
+                            <p class="font-black text-emerald-950 text-[18px] mb-1.5 leading-tight tracking-tight">{{ $book->title }}</p>
+                            <div class="flex items-center gap-2 text-[13px] text-emerald-600 font-bold uppercase tracking-wider">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" /></svg>
                                 {{ $book->author }}
                             </div>
                         </td>
-                        <td class="px-10 py-7">
-                            <div class="flex flex-col gap-2">
-                                <span class="inline-block px-4 py-1.5 bg-emerald-950 text-white text-[10px] font-black rounded-full w-max shadow-md">{{ $book->category }}</span>
-                                <span class="text-[12px] font-black text-emerald-950 ml-1 opacity-40 italic">{{ $book->class }}</span>
+                        <td class="px-8 py-6">
+                            <div class="flex flex-col items-start gap-2">
+                                <span class="inline-flex items-center px-4 py-1.5 bg-emerald-100/50 text-emerald-900 text-[11px] font-black rounded-full border border-emerald-200 uppercase tracking-widest">{{ $book->category }}</span>
+                                <span class="text-[13px] font-black text-emerald-950 opacity-60 italic px-2">{{ $book->class }}</span>
                             </div>
                         </td>
-                        <td class="px-10 py-7 text-center">
-                            <p class="font-black text-emerald-950 text-lg tracking-tighter">Rp {{ number_format($book->base_price, 0, ',', '.') }}</p>
+                        <td class="px-8 py-6 text-center">
+                            <p class="font-black text-emerald-900 text-[20px] tracking-tighter">Rp {{ number_format($book->base_price, 0, ',', '.') }}</p>
                         </td>
-                        <td class="px-10 py-7 text-center">
-                            <span class="inline-block px-5 py-2 bg-emerald-50 text-emerald-950 text-[13px] font-black rounded-xl border border-emerald-100 shadow-inner">
-                                {{ $book->stock }} <span class="text-[10px] opacity-40 ml-1">UNIT</span>
+                        <td class="px-8 py-6 text-center">
+                            <span class="inline-block px-5 py-2.5 bg-white text-emerald-950 text-[15px] font-black rounded-2xl border-2 border-emerald-100 shadow-sm">
+                                {{ $book->stock }} <span class="text-[10px] opacity-50 ml-1 uppercase">Unit</span>
                             </span>
                         </td>
-                        <td class="px-10 py-7">
-                            <div class="flex items-center justify-center gap-3">
-                                <button onclick="openEditModal('{{ $book->id }}', '{{ addslashes($book->title) }}', '{{ addslashes($book->author) }}', '{{ $book->category }}', '{{ str_replace('Kelas ', '', $book->class) }}', '{{ $book->base_price }}', '{{ $book->stock }}', '{{ addslashes($book->desc ?? '') }}', '{{ $book->image }}')" class="w-12 h-12 flex items-center justify-center text-emerald-900 bg-emerald-50 hover:bg-emerald-950 hover:text-white rounded-2xl transition-all duration-500 shadow-sm">
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-5 h-5"><path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1-2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" /></svg>
+                        <td class="px-8 py-6">
+                            <div class="flex items-center justify-center gap-2">
+                                <button onclick="openEditModal('{{ $book->id }}', '{{ addslashes($book->title) }}', '{{ addslashes($book->author) }}', '{{ $book->category }}', '{{ str_replace('Kelas ', '', $book->class) }}', '{{ $book->base_price }}', '{{ $book->stock }}', '{{ addslashes($book->desc ?? '') }}', '{{ $book->image }}')" class="w-11 h-11 flex items-center justify-center text-emerald-600 bg-white border border-emerald-100 hover:bg-emerald-600 hover:text-white hover:border-emerald-600 rounded-xl transition-all duration-300 shadow-sm">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1-2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" /></svg>
                                 </button>
-                                <button onclick="openDeleteModal('{{ $book->id }}', '{{ addslashes($book->title) }}')" class="w-12 h-12 flex items-center justify-center text-rose-500 bg-rose-50 hover:bg-rose-500 hover:text-white rounded-2xl transition-all duration-500 shadow-sm">
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-5 h-5"><path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" /></svg>
+                                <button onclick="openDeleteModal('{{ $book->id }}', '{{ addslashes($book->title) }}')" class="w-11 h-11 flex items-center justify-center text-rose-500 bg-white border border-rose-100 hover:bg-rose-500 hover:text-white hover:border-rose-500 rounded-xl transition-all duration-300 shadow-sm">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" /></svg>
                                 </button>
                             </div>
                         </td>
                     </tr>
-                    @endforeach
+                    @empty
+                    <tr>
+                        <td colspan="6" class="px-10 py-24 text-center">
+                            <div class="w-24 h-24 bg-emerald-50 rounded-3xl flex items-center justify-center mx-auto mb-6">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-12 h-12 text-emerald-200"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25" /></svg>
+                            </div>
+                            <p class="text-emerald-950 font-black text-2xl mb-2 tracking-tight">Katalog Tidak Ditemukan</p>
+                            <p class="text-emerald-600 font-bold">Coba ubah kata kunci pencarian atau filter kategori Anda.</p>
+                        </td>
+                    </tr>
+                    @endforelse
                 </tbody>
             </table>
         </div>

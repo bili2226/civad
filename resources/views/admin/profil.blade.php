@@ -56,12 +56,18 @@
 @endsection
 
 @section('content')
+
 <div class="max-w-4xl mx-auto" x-data="{ editing: false }">
+
     <!-- Action Bar -->
     <div class="mb-8 flex justify-end">
-        <button @click="editing = !editing" 
-                class="px-10 py-5 rounded-[24px] font-black uppercase tracking-widest text-[12px] transition-all duration-300 shadow-2xl"
-                :class="editing ? 'bg-rose-500 text-white shadow-rose-500/20' : 'bg-white text-emerald-950 shadow-emerald-950/10'">
+        <button 
+            @click="editing = !editing" 
+            class="px-10 py-5 rounded-[24px] font-black uppercase tracking-widest text-[12px] transition-all duration-300 shadow-2xl text-white"
+            :class="editing 
+                ? 'bg-red-500 hover:bg-red-600 shadow-red-500/30' 
+                : 'bg-emerald-950 hover:bg-emerald-900 shadow-emerald-950/30'"
+        >
             <span x-text="editing ? 'Batal Edit' : 'Ubah Informasi Profil'"></span>
         </button>
     </div>
@@ -81,21 +87,30 @@
                     @endif
                 </div>
 
-                <div class="flex-1 grid grid-cols-1 gap-y-12">
+                <div class="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-y-10 gap-x-12">
                     <div>
-                        <p class="text-[10px] font-black text-emerald-800 uppercase tracking-[0.3em] mb-3">Admin Display Name</p>
-                        <p class="text-[32px] font-black text-emerald-950 tracking-tight leading-none">{{ $admin->name }}</p>
+                        <p class="text-[10px] font-black text-emerald-800 uppercase tracking-[0.3em] mb-2">Nama Lengkap</p>
+                        <p class="text-[20px] font-black text-emerald-950 tracking-tight">{{ $admin->name }}</p>
                     </div>
-                    
-                    <div class="grid grid-cols-2 gap-12">
-                        <div>
-                            <p class="text-[10px] font-black text-emerald-800 uppercase tracking-[0.3em] mb-3">System Username</p>
-                            <p class="text-[18px] font-black text-emerald-900">@ {{ $admin->username }}</p>
-                        </div>
-                        <div>
-                            <p class="text-[10px] font-black text-emerald-800 uppercase tracking-[0.3em] mb-3">Region Access</p>
-                            <p class="text-[18px] font-black text-emerald-900">{{ $admin->daerah ?? 'Global' }}</p>
-                        </div>
+                    <div>
+                        <p class="text-[10px] font-black text-emerald-800 uppercase tracking-[0.3em] mb-2">System Username</p>
+                        <p class="text-[20px] font-black text-emerald-950 tracking-tight">@ {{ $admin->username }}</p>
+                    </div>
+                    <div>
+                        <p class="text-[10px] font-black text-emerald-800 uppercase tracking-[0.3em] mb-2">Email Aktif</p>
+                        <p class="text-[18px] font-bold text-emerald-900">{{ $admin->email ?? '-' }}</p>
+                    </div>
+                    <div>
+                        <p class="text-[10px] font-black text-emerald-800 uppercase tracking-[0.3em] mb-2">Nomor Telepon</p>
+                        <p class="text-[18px] font-bold text-emerald-900">{{ $admin->phone ?? '-' }}</p>
+                    </div>
+                    <div>
+                        <p class="text-[10px] font-black text-emerald-800 uppercase tracking-[0.3em] mb-2">Region Access</p>
+                        <p class="text-[18px] font-bold text-emerald-900">{{ $admin->daerah ?? 'Global' }}</p>
+                    </div>
+                    <div class="sm:col-span-2">
+                        <p class="text-[10px] font-black text-emerald-800 uppercase tracking-[0.3em] mb-2">Alamat Lengkap</p>
+                        <p class="text-[18px] font-bold text-emerald-900 leading-relaxed">{{ $admin->address ?? 'Belum mengatur alamat.' }}</p>
                     </div>
                 </div>
             </div>
@@ -129,17 +144,35 @@
                     </div>
 
                     <!-- Form Section -->
-                    <div class="w-full md:w-2/3 grid grid-cols-1 gap-8">
-                        <div>
-                            <label class="block text-[10px] font-black text-emerald-900 uppercase tracking-[0.2em] mb-3 ml-2">Display Name</label>
+                    <div class="w-full md:w-2/3 grid grid-cols-1 sm:grid-cols-2 gap-8">
+                        <div class="sm:col-span-2">
+                            <label class="block text-[10px] font-black text-emerald-900 uppercase tracking-[0.2em] mb-3 ml-2">Nama Lengkap</label>
                             <input type="text" name="name" value="{{ $admin->name }}" required
-                                   class="w-full px-6 py-4 bg-emerald-50 border-2 border-emerald-950 rounded-[24px] focus:bg-white focus:outline-none font-bold text-emerald-950 transition-all">
+                                   class="w-full px-6 py-4 bg-emerald-50 border-2 border-emerald-950 rounded-[20px] focus:bg-white focus:outline-none font-bold text-emerald-950 transition-all">
                         </div>
 
                         <div>
+                            <label class="block text-[10px] font-black text-emerald-900 uppercase tracking-[0.2em] mb-3 ml-2">Email</label>
+                            <input type="email" name="email" value="{{ $admin->email }}"
+                                   class="w-full px-6 py-4 bg-emerald-50 border-2 border-emerald-950 rounded-[20px] focus:bg-white focus:outline-none font-bold text-emerald-950 transition-all">
+                        </div>
+
+                        <div>
+                            <label class="block text-[10px] font-black text-emerald-900 uppercase tracking-[0.2em] mb-3 ml-2">Nomor Telepon</label>
+                            <input type="text" name="phone" value="{{ $admin->phone }}"
+                                   class="w-full px-6 py-4 bg-emerald-50 border-2 border-emerald-950 rounded-[20px] focus:bg-white focus:outline-none font-bold text-emerald-950 transition-all">
+                        </div>
+
+                        <div class="sm:col-span-2">
                             <label class="block text-[10px] font-black text-emerald-900 uppercase tracking-[0.2em] mb-3 ml-2">Access Region</label>
                             <input type="text" name="daerah" value="{{ $admin->daerah }}"
-                                   class="w-full px-6 py-4 bg-emerald-50 border-2 border-emerald-950 rounded-[24px] focus:bg-white focus:outline-none font-bold text-emerald-950 transition-all">
+                                   class="w-full px-6 py-4 bg-emerald-50 border-2 border-emerald-950 rounded-[20px] focus:bg-white focus:outline-none font-bold text-emerald-950 transition-all">
+                        </div>
+
+                        <div class="sm:col-span-2">
+                            <label class="block text-[10px] font-black text-emerald-900 uppercase tracking-[0.2em] mb-3 ml-2">Alamat Lengkap</label>
+                            <textarea name="address" rows="3"
+                                      class="w-full px-6 py-4 bg-emerald-50 border-2 border-emerald-950 rounded-[24px] focus:bg-white focus:outline-none font-bold text-emerald-950 transition-all resize-none">{{ $admin->address }}</textarea>
                         </div>
                     </div>
                 </div>

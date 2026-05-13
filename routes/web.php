@@ -68,6 +68,7 @@ Route::post('/login-submit', function (Request $request) {
     $admin = Admin::where('username', $username)->first();
     if ($admin && Hash::check($password, $admin->password)) {
         $request->session()->put('username', $admin->name);
+        $request->session()->put('admin_id', $admin->id);
         $request->session()->put('role', 'admin');
         return redirect('/admin/dashboard')->with('success', 'Selamat datang, ' . $admin->name . '!');
     }
@@ -184,9 +185,25 @@ Route::post('/admin/pesanan/update-status', function (Request $request) {
     return redirect()->back()->with('success', 'Status pesanan #' . $order->order_number . ' berhasil diubah menjadi ' . $order->status);
 });
 
-Route::get('/admin/manajemen-buku', function () {
+Route::get('/admin/manajemen-buku', function (\Illuminate\Http\Request $request) {
     if (session('role') !== 'admin') return redirect('/')->with('error', 'Akses ditolak!');
-    return view('admin.manajemen_buku', ['dummyBooks' => Book::all()]);
+    
+    $query = App\Models\Book::query();
+    
+    if ($request->has('search') && $request->search != '') {
+        $query->where(function($q) use ($request) {
+            $q->where('title', 'like', '%' . $request->search . '%')
+              ->orWhere('author', 'like', '%' . $request->search . '%');
+        });
+    }
+    
+    if ($request->has('category') && $request->category != '') {
+        $query->where('category', $request->category);
+    }
+    
+    return view('admin.manajemen_buku', [
+        'dummyBooks' => $query->get()
+    ]);
 });
 
 Route::post('/admin/buku/store', function (Request $request) {
@@ -537,16 +554,37 @@ Route::post('/pelanggan/profil/update', function (Request $request) {
 // Admin Profile
 Route::get('/admin/profil', function () {
     if (session('role') !== 'admin') return redirect('/')->with('error', 'Akses ditolak!');
-    $admin = Admin::where('username', session('username'))->first();
+    
+    $admin = null;
+    if (session()->has('admin_id')) {
+        $admin = Admin::find(session('admin_id'));
+    } else {
+        // Fallback if session admin_id is not set (e.g. older session)
+        $admin = Admin::where('name', session('username'))->first();
+    }
+    
+    if (!$admin) return redirect('/')->with('error', 'Admin tidak ditemukan. Silakan login kembali.');
+    
     return view('admin.profil', ['admin' => $admin]);
 });
 
 Route::post('/admin/profil/update', function (Request $request) {
     if (session('role') !== 'admin') return redirect('/')->with('error', 'Akses ditolak!');
     
-    $admin = Admin::where('username', session('username'))->first();
+    $admin = null;
+    if (session()->has('admin_id')) {
+        $admin = Admin::find(session('admin_id'));
+    } else {
+        $admin = Admin::where('name', session('username'))->first();
+    }
+    
+    if (!$admin) return redirect('/')->with('error', 'Admin tidak ditemukan.');
+
     $data = [
         'name' => $request->name,
+        'email' => $request->email,
+        'phone' => $request->phone,
+        'address' => $request->address,
         'daerah' => $request->daerah,
     ];
 
@@ -563,6 +601,10 @@ Route::post('/admin/profil/update', function (Request $request) {
     }
     
     $admin->update($data);
+    
+    // Update session name if it was changed
+    session(['username' => $admin->name]);
+    
     return redirect()->back()->with('success', 'Profil admin berhasil diperbarui!');
 });
 

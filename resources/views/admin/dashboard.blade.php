@@ -10,43 +10,117 @@
 @section('content')
     <!-- Stats Grid -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
-        <div class="stat-card bg-white p-8 rounded-[40px] border border-emerald-100 shadow-sm flex flex-col gap-6">
-            <div class="w-20 h-20 bg-emerald-50 text-emerald-600 rounded-full flex items-center justify-center shadow-inner">
+        <div class="stat-card bg-emerald-950 p-8 rounded-[40px] border border-emerald-800 shadow-sm flex flex-col gap-6">
+            <div class="w-20 h-20 bg-white/10 text-white rounded-full flex items-center justify-center shadow-inner">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-10 h-10"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25" /></svg>
             </div>
             <div>
-                <h3 class="text-[32px] font-black text-emerald-950 leading-none mb-1">{{ $totalJenisBuku }}</h3>
-                <p class="text-[13px] font-black text-emerald-700 uppercase tracking-widest opacity-60">Jenis Buku</p>
+                <h3 class="text-[26px] font-black text-white leading-none mb-1">{{ $totalJenisBuku }}</h3>
+                <p class="text-[13px] font-black text-emerald-100 uppercase tracking-widest opacity-80">Jenis Buku</p>
             </div>
         </div>
 
-        <div class="stat-card bg-white p-8 rounded-[40px] border border-emerald-100 shadow-sm flex flex-col gap-6">
-            <div class="w-20 h-20 bg-emerald-50 text-emerald-600 rounded-full flex items-center justify-center shadow-inner">
+        <div class="stat-card bg-emerald-950 p-8 rounded-[40px] border border-emerald-800 shadow-sm flex flex-col gap-6">
+            <div class="w-20 h-20 bg-white/10 text-white rounded-full flex items-center justify-center shadow-inner">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-10 h-10"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 1 0-7.5 0v4.5m11.356-1.993 1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 0 1-1.12-1.243l1.264-12A1.125 1.125 0 0 1 5.513 7.5h12.974c.576 0 1.059.435 1.119 1.007ZM8.625 10.5a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm7.5 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" /></svg>
             </div>
             <div>
-                <h3 class="text-[32px] font-black text-emerald-950 leading-none mb-1">{{ $totalBukuTerjual }}</h3>
-                <p class="text-[13px] font-black text-emerald-700 uppercase tracking-widest opacity-60">Buku Terjual</p>
+                <h3 class="text-[26px] font-black text-white leading-none mb-1">{{ $totalBukuTerjual }}</h3>
+                <p class="text-[13px] font-black text-emerald-100 uppercase tracking-widest opacity-80">Buku Terjual</p>
             </div>
         </div>
 
-        <div class="stat-card bg-white p-8 rounded-[40px] border border-emerald-100 shadow-sm flex flex-col gap-6">
-            <div class="w-20 h-20 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center shadow-inner">
+        <div class="stat-card bg-emerald-950 p-8 rounded-[40px] border border-emerald-800 shadow-sm flex flex-col gap-6">
+            <div class="w-20 h-20 bg-white/10 text-white rounded-full flex items-center justify-center shadow-inner">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-10 h-10"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18.75a60.07 60.07 0 0 1 15.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 0 1 3 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125H3.75m16.5-12.75V15" /></svg>
             </div>
             <div>
-                <h3 class="text-[32px] font-black text-emerald-950 leading-none mb-1">Rp {{ number_format($totalPendapatan, 0, ',', '.') }}</h3>
-                <p class="text-[13px] font-black text-emerald-700 uppercase tracking-widest opacity-60">Pendapatan</p>
+                <h3 class="text-[26px] font-black text-white leading-none mb-1">Rp {{ number_format($totalPendapatan, 0, ',', '.') }}</h3>
+                <p class="text-[13px] font-black text-emerald-100 uppercase tracking-widest opacity-80">Pendapatan</p>
             </div>
         </div>
 
-        <div class="stat-card bg-white p-8 rounded-[40px] border border-emerald-100 shadow-sm flex flex-col gap-6">
-            <div class="w-20 h-20 bg-amber-50 text-amber-600 rounded-full flex items-center justify-center shadow-inner">
+        <div class="stat-card bg-emerald-950 p-8 rounded-[40px] border border-emerald-800 shadow-sm flex flex-col gap-6">
+            <div class="w-20 h-20 bg-white/10 text-white rounded-full flex items-center justify-center shadow-inner">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-10 h-10"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" /></svg>
             </div>
             <div>
-                <h3 class="text-[32px] font-black text-amber-600 leading-none mb-1">{{ $menungguVerifikasi }}</h3>
-                <p class="text-[13px] font-black text-emerald-700 uppercase tracking-widest opacity-60">Pesanan Pending</p>
+                <h3 class="text-[26px] font-black text-white leading-none mb-1">{{ $menungguVerifikasi }}</h3>
+                <p class="text-[13px] font-black text-emerald-100 uppercase tracking-widest opacity-80">Pesanan Pending</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Charts Section -->
+    @php
+        // Data for Book Sales Bar Chart
+        $bookSalesData = \App\Models\OrderItem::join('books', 'order_items.book_id', '=', 'books.id')
+            ->selectRaw('books.category, SUM(order_items.quantity) as total_sold')
+            ->groupBy('books.category')
+            ->orderByDesc('total_sold')
+            ->pluck('total_sold', 'books.category')
+            ->toArray();
+            
+        $bookLabels = json_encode(array_keys($bookSalesData));
+        $bookSalesCounts = json_encode(array_values($bookSalesData));
+
+        // Data for Revenue Chart (Last 6 Months)
+        $revenueData = \App\Models\Order::selectRaw('MONTH(created_at) as month, SUM(total_amount) as total')
+            ->where('created_at', '>=', now()->subMonths(5)->startOfMonth())
+            ->whereIn('status', ['Selesai', 'Dikirim', 'Sedang Dikirim', 'Terverifikasi', 'Verifikasi'])
+            ->groupBy('month')
+            ->orderBy('month')
+            ->pluck('total', 'month')
+            ->toArray();
+
+        $months = [
+            1 => 'Jan', 2 => 'Feb', 3 => 'Mar', 4 => 'Apr', 5 => 'Mei', 6 => 'Jun',
+            7 => 'Jul', 8 => 'Agu', 9 => 'Sep', 10 => 'Okt', 11 => 'Nov', 12 => 'Des'
+        ];
+        
+        $revenueLabels = [];
+        $revenueValues = [];
+        
+        for ($i = 5; $i >= 0; $i--) {
+            $date = now()->subMonths($i);
+            $monthNum = $date->month;
+            $revenueLabels[] = $months[$monthNum];
+            $revenueValues[] = $revenueData[$monthNum] ?? 0;
+        }
+        
+        $revenueLabelsJson = json_encode($revenueLabels);
+        $revenueValuesJson = json_encode($revenueValues);
+    @endphp
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
+        <!-- Revenue Line Chart -->
+        <div class="lg:col-span-2 bg-white p-8 rounded-[40px] border border-emerald-100 shadow-sm flex flex-col">
+            <div class="mb-6">
+                <h3 class="text-[20px] font-black text-emerald-950 tracking-tight">Tren Pendapatan</h3>
+                <p class="text-[12px] font-bold text-emerald-600 uppercase tracking-widest mt-1">6 Bulan Terakhir</p>
+            </div>
+            <div class="flex-1 relative min-h-[300px]">
+                <canvas id="revenueChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Book Sales Bar Chart -->
+        <div class="bg-white p-8 rounded-[40px] border border-emerald-100 shadow-sm flex flex-col">
+            <div class="mb-6">
+                <h3 class="text-[20px] font-black text-emerald-950 tracking-tight">Penjualan Buku</h3>
+                <p class="text-[12px] font-bold text-emerald-600 uppercase tracking-widest mt-1">Berdasarkan Tingkat Pendidikan</p>
+            </div>
+            <div class="flex-1 relative min-h-[300px] mt-4">
+                @if(empty($bookSalesData))
+                    <div class="text-center mt-12">
+                        <div class="w-16 h-16 bg-emerald-50 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-8 h-8 text-emerald-200"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6a7.5 7.5 0 1 0 7.5 7.5h-7.5V6Z" /><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 10.5H21A7.5 7.5 0 0 0 13.5 3v7.5Z" /></svg>
+                        </div>
+                        <p class="text-[12px] font-bold text-emerald-600 uppercase tracking-widest">Belum ada data</p>
+                    </div>
+                @else
+                    <canvas id="bookChart"></canvas>
+                @endif
             </div>
         </div>
     </div>
@@ -126,4 +200,132 @@
             </table>
         </div>
     </div>
+@endsection
+
+@section('scripts')
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Shared Chart Configuration
+        Chart.defaults.font.family = "'Plus Jakarta Sans', sans-serif";
+        Chart.defaults.color = '#0f766e'; // emerald-700
+        
+        // 1. Revenue Line Chart
+        const revenueCtx = document.getElementById('revenueChart');
+        if (revenueCtx) {
+            new Chart(revenueCtx, {
+                type: 'line',
+                data: {
+                    labels: {!! $revenueLabelsJson ?? '[]' !!},
+                    datasets: [{
+                        label: 'Pendapatan (Rp)',
+                        data: {!! $revenueValuesJson ?? '[]' !!},
+                        borderColor: '#10b981', // emerald-500
+                        backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                        borderWidth: 4,
+                        pointBackgroundColor: '#052e16', // emerald-950
+                        pointBorderColor: '#ffffff',
+                        pointBorderWidth: 2,
+                        pointRadius: 6,
+                        pointHoverRadius: 8,
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: '#052e16',
+                            titleFont: { size: 13, weight: 'bold' },
+                            bodyFont: { size: 14, weight: 'bold' },
+                            padding: 12,
+                            cornerRadius: 12,
+                            displayColors: false,
+                            callbacks: {
+                                label: function(context) {
+                                    return 'Rp ' + context.raw.toLocaleString('id-ID');
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: { display: false, drawBorder: false },
+                            ticks: { font: { weight: 'bold' } }
+                        },
+                        y: {
+                            border: { display: false },
+                            grid: { color: 'rgba(16, 185, 129, 0.1)' },
+                            ticks: {
+                                font: { weight: 'bold' },
+                                callback: function(value) {
+                                    if (value >= 1000000) return 'Rp ' + (value / 1000000).toFixed(1) + 'M';
+                                    if (value >= 1000) return 'Rp ' + (value / 1000).toFixed(0) + 'K';
+                                    return 'Rp ' + value;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // 2. Book Sales Bar Chart
+        const bookCtx = document.getElementById('bookChart');
+        if (bookCtx) {
+            new Chart(bookCtx, {
+                type: 'bar',
+                data: {
+                    labels: {!! $bookLabels ?? '[]' !!},
+                    datasets: [{
+                        label: 'Buku Terjual',
+                        data: {!! $bookSalesCounts ?? '[]' !!},
+                        backgroundColor: '#10b981', // emerald-500
+                        borderRadius: 8,
+                        barPercentage: 0.6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: '#052e16',
+                            titleFont: { size: 12, weight: 'bold' },
+                            bodyFont: { size: 14, weight: 'bold' },
+                            padding: 12,
+                            cornerRadius: 12,
+                            displayColors: false,
+                            callbacks: {
+                                label: function(context) {
+                                    return context.raw + ' Buku';
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: { display: false, drawBorder: false },
+                            ticks: { 
+                                font: { weight: 'bold', size: 10 }
+                            }
+                        },
+                        y: {
+                            border: { display: false },
+                            grid: { color: 'rgba(16, 185, 129, 0.1)' },
+                            ticks: {
+                                font: { weight: 'bold' },
+                                stepSize: 1
+                            }
+                        }
+                    }
+                }
+            });
+        }
+    });
+</script>
 @endsection
