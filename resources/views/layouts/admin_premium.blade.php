@@ -115,18 +115,24 @@
 <body class="page-bg bg-white font-sans text-emerald-950 overflow-x-hidden">
 
     <!-- Sidebar -->
-    <aside class="fixed inset-y-0 left-0 w-[340px] glass-sidebar flex flex-col z-50">
+    <aside id="admin-sidebar" class="fixed inset-y-0 left-0 w-[340px] glass-sidebar flex flex-col z-50 transform -translate-x-full lg:translate-x-0 transition-transform duration-500 ease-in-out">
         <!-- Logo -->
-        <div class="h-32 flex items-center px-8 relative">
+        <div class="h-32 flex flex-col items-center px-8 relative">
             <div class="flex items-center gap-4 px-6 py-4 rounded-[28px] border border-white/10 w-full hover:border-white/20 transition-all duration-500 group cursor-pointer bg-white/5 backdrop-blur-md">
                 <div class="flex items-center justify-center bg-white p-2 rounded-xl shadow-xl transform group-hover:rotate-6 transition-transform duration-500">
                     <img src="{{ asset('logo.jpg') }}" alt="Logo AD" class="h-8 w-auto">
                 </div>
-                <div class="flex flex-col">
-                    <h1 class="font-black text-xl text-white leading-none tracking-tighter">Arya Duta</h1>
-                    <p class="text-[10px] font-black text-emerald-400 uppercase tracking-[0.3em] mt-1.5">Admin Central</p>
+                <div class="flex flex-col overflow-hidden">
+                    <h1 class="font-black text-xl text-white leading-none tracking-tighter truncate">Arya Duta</h1>
+                    <p class="text-[10px] font-black text-white uppercase tracking-[0.3em] mt-1.5 truncate">Admin Central</p>
                 </div>
             </div>
+            
+            <!-- Quick Back Link -->
+            <a href="{{ url('/') }}" class="absolute -bottom-4 left-1/2 -translate-x-1/2 px-5 py-2.5 bg-emerald-500 text-emerald-950 rounded-full text-[10px] font-black uppercase tracking-widest shadow-xl hover:bg-white hover:scale-105 transition-all active:scale-95 flex items-center gap-2 z-10 whitespace-nowrap">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" class="w-3.5 h-3.5"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" /></svg>
+                Halaman Utama
+            </a>
         </div>
 
         <!-- Navigation -->
@@ -136,10 +142,10 @@
                     ['url' => '/admin/dashboard', 'label' => 'Dashboard', 'icon' => '<path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 0 1 6 3.75h2.25A2.25 2.25 0 0 1 10.5 6v2.25a2.25 2.25 0 0 1-2.25 2.25H6a2.25 2.25 0 0 1-2.25-2.25V6ZM3.75 15.75A2.25 2.25 0 0 1 6 13.5h2.25a2.25 2.25 0 0 1 2.25 2.25V18a2.25 2.25 0 0 1-2.25 2.25H6A2.25 2.25 0 0 1 3.75 18v-2.25ZM13.5 6a2.25 2.25 0 0 1 2.25-2.25H18A2.25 2.25 0 0 1 20.25 6v2.25A2.25 2.25 0 0 1 18 10.5h-2.25a2.25 2.25 0 0 1-2.25-2.25V6ZM13.5 15.75a2.25 2.25 0 0 1 2.25-2.25H18a2.25 2.25 0 0 1 2.25 2.25V18A2.25 2.25 0 0 1 18 20.25h-2.25a2.25 2.25 0 0 1-2.25-2.25V15.75Z" />'],
                     ['url' => '/admin/manajemen-banner', 'label' => 'Banner Promo', 'icon' => '<path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0z" />'],
                     ['url' => '/admin/manajemen-buku', 'label' => 'Katalog Buku', 'icon' => '<path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25" />'],
-                    ['url' => '/admin/data-pelanggan', 'label' => 'Database User', 'icon' => '<path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 0 1 8.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0 1 11.964-3.07M12 6.375a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0Zm8.25 2.25a2.625 2.625 0 1 1-5.25 0 2.625 2.625 0 0 1 5.25 0Z" />'],
+                    ['url' => '/admin/manajemen-user', 'label' => 'Kelola User', 'icon' => '<path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 0 1 8.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0 1 11.964-3.07M12 6.375a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0Zm8.25 2.25a2.625 2.625 0 1 1-5.25 0 2.625 2.625 0 0 1 5.25 0Z" />'],
                     ['url' => '/admin/manajemen-pesanan', 'label' => 'Pesanan Masuk', 'icon' => '<path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 1 0-7.5 0v4.5m11.356-1.993 1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 0 1-1.12-1.243l1.264-12A1.125 1.125 0 0 1 5.513 7.5h12.974c.576 0 1.059.435 1.119 1.007ZM8.625 10.5a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm7.5 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />'],
+                    ['url' => '/admin/laporan-penjualan', 'label' => 'Laporan Penjualan', 'icon' => '<path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3v11.25A2.25 2.25 0 0 0 6 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0 1 18 16.5h-2.25m-7.5 0h7.5m-7.5 0V3.75m0 12.75V21m7.5-17.25V21m-7.5-12.75h7.5m-7.5 3h7.5" />'],
                     ['url' => '/admin/rewards', 'label' => 'Loyalty Rewards', 'icon' => '<path stroke-linecap="round" stroke-linejoin="round" d="M11.48 3.499a.562.562 0 0 1 1.04 0l2.125 5.111a.563.563 0 0 0 .475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 0 0-.182.557l1.285 5.385a.562.562 0 0 1-.84.61l-4.725-2.885a.563.563 0 0 0-.586 0L6.982 20.54a.562.562 0 0 1-.84-.61l1.285-5.386a.562.562 0 0 0-.182-.557l-4.204-3.602a.563.563 0 0 1 .321-.988l5.518-.442a.563.563 0 0 0 .475-.345L11.48 3.5Z" />'],
-                    ['url' => '/admin/tambah-admin', 'label' => 'Akses Admin', 'icon' => '<path stroke-linecap="round" stroke-linejoin="round" d="M18 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0ZM3 19.235v-.11a6.375 6.375 0 0 1 12.75 0v.109A12.318 12.318 0 0 1 9.374 21c-2.331 0-4.512-.645-6.374-1.766Z" />'],
                 ];
             @endphp
 
@@ -147,7 +153,7 @@
                 @php $isActive = request()->is(ltrim($item['url'], '/')); @endphp
                 <a href="{{ url($item['url']) }}" class="flex items-center gap-4 px-6 py-4 rounded-[24px] text-[12px] font-black uppercase tracking-[0.15em] transition-all duration-500 group {{ $isActive ? 'nav-item-active text-emerald-950' : 'text-white hover:text-white hover:bg-white/10' }}">
                     <div class="flex items-center justify-center w-6 h-6">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-full h-full transition-all duration-500 group-hover:scale-125 {{ $isActive ? 'text-emerald-800' : 'text-emerald-400/50 group-hover:text-emerald-400' }}">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-full h-full transition-all duration-500 group-hover:scale-125 {{ $isActive ? 'text-emerald-950' : 'text-white group-hover:text-white' }}">
                             {!! $item['icon'] !!}
                         </svg>
                     </div>
@@ -171,14 +177,21 @@
     </aside>
 
     <!-- Main Content -->
-    <main class="ml-[340px] min-h-screen relative z-10">
+    <main class="ml-0 lg:ml-[340px] min-h-screen relative z-10">
         <!-- Topbar -->
-        <header class="h-28 glass-nav sticky top-0 z-40 flex items-center justify-between px-12 shadow-2xl">
-            <div class="animate-in fade-in slide-in-from-left-4 duration-700">
-                @yield('header')
+        <header class="h-20 lg:h-28 glass-nav sticky top-0 z-40 flex items-center justify-between px-3 lg:px-12 shadow-2xl">
+            <div class="flex items-center gap-1.5 md:gap-4 min-w-0">
+                <button id="sidebar-toggle" class="lg:hidden text-white p-1 md:p-2 hover:bg-white/10 rounded-xl transition-all shrink-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-6 h-6 md:w-7 md:h-7">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+                    </svg>
+                </button>
+                <div class="animate-in fade-in slide-in-from-left-4 duration-700 min-w-0">
+                    @yield('header')
+                </div>
             </div>
             
-            <div class="flex items-center gap-8">
+            <div class="flex items-center gap-2 md:gap-8 shrink-0">
                 <!-- Admin Notifications -->
                 @php
                     $unreadAdminNotifs = \App\Models\Notification::where('role', 'admin')
@@ -190,23 +203,23 @@
                         ->get();
                 @endphp
                 <div class="relative group/admin-notif">
-                    <button class="relative w-14 h-14 rounded-2xl bg-white/5 border border-white/10 text-white flex items-center justify-center hover:bg-white/10 transition-all duration-300">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-6 h-6">
+                    <button class="relative w-10 h-10 md:w-14 md:h-14 rounded-xl md:rounded-2xl bg-white/5 border border-white/10 text-white flex items-center justify-center hover:bg-white/10 transition-all duration-300">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-5 h-5 md:w-6 md:h-6">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0" />
                         </svg>
                         @if($unreadAdminNotifs > 0)
-                            <span class="absolute -top-1 -right-1 bg-amber-500 text-white text-[10px] font-black w-6 h-6 rounded-full flex items-center justify-center border-4 border-emerald-950 shadow-lg animate-bounce">
+                            <span class="absolute -top-1 -right-1 bg-amber-500 text-white text-[8px] md:text-[10px] font-black w-4 h-4 md:w-6 md:h-6 rounded-full flex items-center justify-center border-2 md:border-4 border-white shadow-lg animate-bounce">
                                 {{ $unreadAdminNotifs }}
                             </span>
                         @endif
                     </button>
 
                     <!-- Dropdown -->
-                    <div class="absolute right-0 mt-4 w-[380px] bg-white rounded-[40px] shadow-2xl border border-emerald-100 overflow-hidden opacity-0 invisible group-hover/admin-notif:opacity-100 group-hover/admin-notif:visible transition-all duration-300 z-50 translate-y-4 group-hover/admin-notif:translate-y-0">
-                        <div class="p-8 bg-emerald-950 text-white flex items-center justify-between">
+                    <div class="absolute right-[-130px] sm:right-0 top-full mt-4 w-[85vw] sm:w-[400px] bg-white rounded-[32px] md:rounded-[40px] shadow-2xl border border-emerald-100 overflow-hidden opacity-0 invisible group-hover/admin-notif:opacity-100 group-hover/admin-notif:visible transition-all duration-300 z-[100] translate-y-4 group-hover/admin-notif:translate-y-0">
+                        <div class="p-6 md:p-8 bg-emerald-950 text-white flex items-center justify-between">
                             <div>
                                 <h4 class="font-black text-[16px] tracking-tight">Pusat Informasi</h4>
-                                <p class="text-[10px] font-bold text-emerald-400 uppercase tracking-widest mt-1">Aktivitas Sistem Terbaru</p>
+                                <p class="text-[10px] font-bold text-white uppercase tracking-widest mt-1">Aktivitas Sistem Terbaru</p>
                             </div>
                             @if($unreadAdminNotifs > 0)
                                 <a href="{{ url('/admin/notifications/read-all') }}" class="text-[10px] font-black bg-white/10 px-3 py-1.5 rounded-lg hover:bg-white/20 transition-all uppercase tracking-widest">Baca Semua</a>
@@ -214,15 +227,15 @@
                         </div>
                         <div class="max-h-[400px] overflow-y-auto custom-scrollbar">
                             @forelse($recentAdminNotifs as $notif)
-                                <a href="{{ $notif->link ?? '#' }}" class="block p-8 border-b border-emerald-50 hover:bg-emerald-50 transition-colors {{ !$notif->is_read ? 'bg-emerald-50/50' : '' }}">
+                                <a href="{{ $notif->link ?? '#' }}" class="block p-5 md:p-8 border-b border-emerald-50 hover:bg-emerald-50 transition-colors {{ !$notif->is_read ? 'bg-emerald-50/50' : '' }}">
                                     <div class="flex gap-5">
                                         <div class="w-3 h-3 rounded-full mt-2 shrink-0 {{ $notif->type == 'success' ? 'bg-emerald-500' : ($notif->type == 'warning' ? 'bg-amber-500' : 'bg-blue-500') }} shadow-lg shadow-current/20"></div>
                                         <div>
                                             <p class="font-black text-emerald-950 text-[15px] leading-tight mb-2">{{ $notif->title }}</p>
                                             <p class="text-[13px] text-emerald-800 leading-relaxed font-medium">{{ $notif->message }}</p>
                                             <div class="flex items-center gap-2 mt-4">
-                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-3 h-3 text-emerald-300"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" /></svg>
-                                                <p class="text-[10px] font-black text-emerald-300 uppercase tracking-widest">{{ $notif->created_at->diffForHumans() }}</p>
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-3 h-3 text-emerald-950"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" /></svg>
+                                                <p class="text-[10px] font-black text-emerald-950 uppercase tracking-widest">{{ $notif->created_at->diffForHumans() }}</p>
                                             </div>
                                         </div>
                                     </div>
@@ -240,20 +253,20 @@
                     </div>
                 </div>
 
-                <a href="{{ url('/admin/profil') }}" class="flex items-center gap-5 bg-white/5 px-6 py-3 rounded-[28px] border border-white/10 group hover:border-white/20 transition-all hover:bg-white/10">
-                    @php
-                        $adminUser = null;
-                        if (session()->has('admin_id')) {
-                            $adminUser = \App\Models\Admin::find(session('admin_id'));
-                        } else {
-                            $adminUser = \App\Models\Admin::where('name', session('username'))->first();
-                        }
-                    @endphp
-                    <div class="text-right">
-                        <p class="text-[14px] font-black text-white leading-none tracking-tight">{{ session('username') ?? 'Admin' }}</p>
-                        <p class="text-[10px] font-black text-emerald-400 uppercase tracking-[0.2em] mt-1.5">Admin</p>
+                @php
+                    $adminUser = null;
+                    if (session()->has('admin_id')) {
+                        $adminUser = \App\Models\Admin::find(session('admin_id'));
+                    } else {
+                        $adminUser = \App\Models\Admin::where('name', session('username'))->first();
+                    }
+                @endphp
+                <a href="{{ url('/admin/profil') }}" class="flex items-center gap-2 md:gap-5 bg-white/5 px-1.5 md:px-6 py-1.5 md:py-3 rounded-xl md:rounded-[28px] border border-white/10 group hover:border-white/20 transition-all hover:bg-white/10 shrink-0">
+                    <div class="text-right hidden sm:block">
+                        <p class="text-[12px] lg:text-[14px] font-black text-white leading-none tracking-tight">{{ session('username') ?? 'Admin' }}</p>
+                        <p class="text-[9px] lg:text-[10px] font-black text-white uppercase tracking-[0.2em] mt-1.5">Admin</p>
                     </div>
-                    <div class="w-14 h-14 bg-white text-emerald-950 rounded-2xl flex items-center justify-center font-black shadow-xl border border-white uppercase text-[20px] transform group-hover:scale-105 transition-transform duration-500 overflow-hidden">
+                    <div class="w-10 h-10 lg:w-14 lg:h-14 bg-white text-emerald-950 rounded-xl lg:rounded-2xl flex items-center justify-center font-black shadow-xl border border-white uppercase text-[16px] lg:text-[20px] transform group-hover:scale-105 transition-transform duration-500 overflow-hidden">
                         @if($adminUser && $adminUser->profile_photo)
                             <img src="{{ $adminUser->profile_photo }}" class="w-full h-full object-cover">
                         @else
@@ -262,10 +275,11 @@
                     </div>
                 </a>
             </div>
+            </div>
         </header>
 
         <!-- Body -->
-        <div class="p-12">
+        <div class="p-6 lg:p-12">
             @hasSection('topbar_actions')
             <div class="mb-10 flex justify-end">
                 @yield('topbar_actions')
@@ -277,7 +291,7 @@
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" class="w-7 h-7"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" /></svg>
                 </div>
                 <div>
-                    <p class="text-[10px] uppercase tracking-[0.3em] text-emerald-400 font-black mb-1">System Notification</p>
+                    <p class="text-[10px] uppercase tracking-[0.3em] text-white font-black mb-1">System Notification</p>
                     <p class="text-white font-bold text-lg leading-tight">{{ session('success') }}</p>
                 </div>
             </div>
@@ -291,5 +305,26 @@
 
     @yield('modals')
     @yield('scripts')
+
+    <script>
+        const sidebar = document.getElementById('admin-sidebar');
+        const sidebarToggle = document.getElementById('sidebar-toggle');
+        
+        if(sidebarToggle && sidebar) {
+            sidebarToggle.addEventListener('click', (e) => {
+                e.stopPropagation();
+                sidebar.classList.toggle('-translate-x-full');
+            });
+
+            // Close sidebar when clicking outside on mobile
+            document.addEventListener('click', (e) => {
+                if (window.innerWidth < 1024) {
+                    if (!sidebar.contains(e.target) && !sidebarToggle.contains(e.target)) {
+                        sidebar.classList.add('-translate-x-full');
+                    }
+                }
+            });
+        }
+    </script>
 </body>
 </html>

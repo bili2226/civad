@@ -41,42 +41,42 @@
         <p class="text-emerald-700 font-medium">Pilih promo yang sesuai dengan jumlah poin yang Anda miliki.</p>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+    <div class="grid grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8">
         @foreach($rewards as $reward)
             @php
                 $canRedeem = (Auth::user()->points ?? 0) >= $reward->points_required;
             @endphp
-            <div class="bg-white border-2 {{ $canRedeem ? 'border-emerald-950' : 'border-emerald-100 opacity-60' }} rounded-[40px] p-8 shadow-2xl flex flex-col relative overflow-hidden group transition-all duration-500 {{ $canRedeem ? 'hover:-translate-y-2 hover:shadow-emerald-950/20' : '' }}">
+            <div class="bg-white border-2 {{ $canRedeem ? 'border-emerald-950' : 'border-emerald-100 opacity-60' }} rounded-[32px] md:rounded-[40px] p-4 md:p-8 shadow-2xl flex flex-col relative overflow-hidden group transition-all duration-500 {{ $canRedeem ? 'hover:-translate-y-2 hover:shadow-emerald-950/20' : '' }}">
                 
                 @if($canRedeem)
-                    <div class="absolute top-0 right-0 p-6">
-                        <div class="w-10 h-10 bg-emerald-50 text-emerald-600 rounded-full flex items-center justify-center animate-bounce">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" class="w-5 h-5"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" /></svg>
+                    <div class="absolute top-0 right-0 p-3 md:p-6">
+                        <div class="w-8 h-8 md:w-10 md:h-10 bg-emerald-50 text-emerald-600 rounded-full flex items-center justify-center animate-bounce">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" class="w-4 h-4 md:w-5 md:h-5"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" /></svg>
                         </div>
                     </div>
                 @endif
 
-                <div class="mb-8">
-                    <div class="w-16 h-16 {{ $canRedeem ? 'bg-amber-500' : 'bg-emerald-100' }} rounded-2xl flex items-center justify-center text-white mb-6 shadow-lg">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-8 h-8"><path stroke-linecap="round" stroke-linejoin="round" d="M21 11.25v8.25a1.5 1.5 0 0 1-1.5 1.5H5.25a1.5 1.5 0 0 1-1.5-1.5v-8.25M12 4.875A2.625 2.625 0 1 0 9.375 7.5H12m0-2.625V7.5m0-2.625A2.625 2.625 0 1 1 14.625 7.5H12m0 0V21m-8.625-9.75h17.25" /></svg>
+                <div class="mb-4 md:mb-8">
+                    <div class="w-10 h-10 md:w-16 md:h-16 {{ $canRedeem ? 'bg-amber-500' : 'bg-emerald-100' }} rounded-xl md:rounded-2xl flex items-center justify-center text-white mb-4 md:mb-6 shadow-lg">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-5 h-5 md:w-8 md:h-8"><path stroke-linecap="round" stroke-linejoin="round" d="M21 11.25v8.25a1.5 1.5 0 0 1-1.5 1.5H5.25a1.5 1.5 0 0 1-1.5-1.5v-8.25M12 4.875A2.625 2.625 0 1 0 9.375 7.5H12m0-2.625V7.5m0-2.625A2.625 2.625 0 1 1 14.625 7.5H12m0 0V21m-8.625-9.75h17.25" /></svg>
                     </div>
-                    <p class="text-[12px] font-black {{ $canRedeem ? 'text-amber-600' : 'text-emerald-300' }} uppercase tracking-[0.2em] mb-2">{{ $reward->points_required }} Poin Dibutuhkan</p>
-                    <h3 class="text-3xl font-black text-emerald-950 tracking-tighter leading-tight">{{ $reward->description ?? 'Diskon Spesial' }}</h3>
+                    <p class="text-[8px] md:text-[12px] font-black {{ $canRedeem ? 'text-amber-600' : 'text-emerald-800' }} uppercase tracking-[0.2em] mb-1 md:mb-2">{{ $reward->points_required }} Poin</p>
+                    <h3 class="text-sm md:text-3xl font-black text-emerald-950 tracking-tighter leading-tight line-clamp-2">{{ $reward->description ?? 'Diskon Spesial' }}</h3>
                 </div>
 
-                <div class="mt-auto pt-8 border-t border-emerald-50 flex items-center justify-between">
-                    <div>
-                        <p class="text-[11px] font-bold text-emerald-400 uppercase tracking-widest mb-1">Nilai Potongan</p>
-                        <p class="text-2xl font-black text-emerald-950 tracking-tight">Rp {{ number_format($reward->discount_amount, 0, ',', '.') }}</p>
+                <div class="mt-auto pt-4 md:pt-8 border-t border-emerald-50 flex flex-col md:flex-row items-center justify-between gap-4">
+                    <div class="text-center md:text-left">
+                        <p class="text-[8px] md:text-[11px] font-bold text-emerald-900 uppercase tracking-widest mb-0.5">Potongan</p>
+                        <p class="text-sm md:text-2xl font-black text-emerald-950 tracking-tight">Rp {{ number_format($reward->discount_amount, 0, ',', '.') }}</p>
                     </div>
                     
                     @if($canRedeem)
-                        <button onclick="redeemPoints('{{ $reward->id }}', '{{ $reward->points_required }}', '{{ $reward->discount_amount }}')" class="px-8 py-4 bg-emerald-950 text-white rounded-[20px] text-[13px] font-black hover:bg-emerald-800 transition-all active:scale-95 shadow-xl shadow-emerald-950/20">
-                            Tukar Sekarang
+                        <button onclick="redeemPoints('{{ $reward->id }}', '{{ $reward->points_required }}', '{{ $reward->discount_amount }}')" class="w-full md:w-auto px-4 md:px-8 py-2 md:py-4 bg-emerald-950 text-white rounded-xl md:rounded-[20px] text-[10px] md:text-[13px] font-black hover:bg-emerald-800 transition-all active:scale-95 shadow-xl shadow-emerald-950/20">
+                            Tukar
                         </button>
                     @else
-                        <div class="px-6 py-3 bg-emerald-50 text-emerald-300 rounded-xl text-[11px] font-black uppercase tracking-widest border border-emerald-100">
-                            Poin Kurang
+                        <div class="w-full md:w-auto px-4 py-2 bg-emerald-50 text-emerald-800 rounded-lg text-[9px] font-black uppercase tracking-widest border border-emerald-100 text-center">
+                            Kurang
                         </div>
                     @endif
                 </div>

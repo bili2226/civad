@@ -112,10 +112,54 @@ Route::get('/admin/dashboard', function () {
     ]);
 });
 
-Route::get('/admin/tambah-admin', function () {
+Route::get('/admin/manajemen-user', function (Request $request) {
     if (session('role') !== 'admin') return redirect('/')->with('error', 'Akses ditolak!');
-    return view('admin.tambah_admin');
+    
+    $search = $request->input('search');
+
+    $adminsQuery = Admin::query();
+    $customersQuery = User::query();
+
+    if ($search) {
+        $adminsQuery->where(function($q) use ($search) {
+            $q->where('name', 'like', "%$search%")
+              ->orWhere('username', 'like', "%$search%");
+        });
+        $customersQuery->where(function($q) use ($search) {
+            $q->where('name', 'like', "%$search%")
+              ->orWhere('username', 'like', "%$search%");
+        });
+    }
+
+    $admins = $adminsQuery->get();
+    $customers = $customersQuery->get();
+
+    $totalAdmins = Admin::count();
+    $totalCustomers = User::count();
+    $totalOrders = Order::count();
+    
+    return view('admin.manajemen_user', [
+        'admins' => $admins,
+        'customers' => $customers,
+        'totalAdmins' => $totalAdmins,
+        'totalCustomers' => $totalCustomers,
+        'totalOrders' => $totalOrders
+    ]);
 });
+
+Route::post('/admin/user/update-points', function (Request $request) {
+    if (session('role') !== 'admin') return redirect('/')->with('error', 'Akses ditolak!');
+    
+    $user = User::findOrFail($request->input('id'));
+    $pointsToAdd = (int) $request->input('points');
+    
+    $user->increment('points', $pointsToAdd);
+    
+    // Notify Customer about point addition
+    Notification::send('pelanggan', 'Poin Loyalty Bertambah!', 'Admin telah menambahkan ' . $pointsToAdd . ' poin ke akun Anda.', $user->id, 'success', '/pelanggan/rewards');
+    
+    return redirect()->back()->with('success', 'Poin loyalty untuk ' . $user->name . ' berhasil ditambahkan!');
+})->name('admin.user.update-points');
 
 Route::post('/admin/tambah-admin/submit', function (Request $request) {
     if (session('role') !== 'admin') return redirect('/')->with('error', 'Akses ditolak!');
@@ -133,19 +177,26 @@ Route::post('/admin/tambah-admin/submit', function (Request $request) {
         'daerah' => $request->daerah ?? 'Pusat',
     ]);
 
-    return redirect('/admin/dashboard')->with('success', 'Admin baru berhasil ditambahkan ke tabel admins!');
+    return redirect('/admin/manajemen-user')->with('success', 'Admin baru berhasil ditambahkan ke sistem!');
 })->name('admin.tambah.submit');
 
-Route::get('/admin/data-pelanggan', function () {
+Route::post('/admin/user/delete', function (Request $request) {
     if (session('role') !== 'admin') return redirect('/')->with('error', 'Akses ditolak!');
     
-    $customers = User::all(); // Now all users are customers
-    $totalOrders = Order::count();
-    
-    return view('admin.pelanggan', [
-        'customers' => $customers,
-        'totalOrders' => $totalOrders
-    ]);
+    $id = $request->input('id');
+    $role = $request->input('role');
+
+    if ($role === 'admin') {
+        // Prevent deleting self
+        if (session('admin_id') == $id) {
+            return redirect()->back()->with('error', 'Anda tidak dapat menghapus akun Anda sendiri!');
+        }
+        Admin::findOrFail($id)->delete();
+    } else {
+        User::findOrFail($id)->delete();
+    }
+
+    return redirect()->back()->with('success', 'Akun berhasil dihapus dari sistem!');
 });
 
 Route::get('/admin/manajemen-pesanan', function () {
@@ -156,6 +207,106 @@ Route::get('/admin/manajemen-pesanan', function () {
     return view('admin.pesanan', [
         'orders' => $orders
     ]);
+});
+
+Route::get('/admin/laporan-penjualan', function (Request $request) {
+    if (session('role') !== 'admin') return redirect('/')->with('error', 'Akses ditolak!');
+    
+    $filter = $request->input('filter', 'all');
+    $startDate = $request->input('start_date');
+    $endDate = $request->input('end_date');
+    
+    $query = Order::with(['user', 'items.book'])->orderBy('created_at', 'desc');
+
+    if ($startDate && $endDate) {
+        $query->whereBetween('created_at', [$startDate . ' 00:00:00', $endDate . ' 23:59:59']);
+        $filter = 'custom';
+    } else {
+        if ($filter === 'today') {
+            $query->whereDate('created_at', now()->today());
+        } elseif ($filter === 'week') {
+            $query->whereBetween('created_at', [now()->startOfWeek(), now()->endOfWeek()]);
+        } elseif ($filter === 'month') {
+            $query->whereMonth('created_at', now()->month)->whereYear('created_at', now()->year);
+        } elseif ($filter === 'year') {
+            $query->whereYear('created_at', now()->year);
+        }
+    }
+
+    $orders = $query->get();
+    $totalRevenue = $orders->where('status', '!=', 'Cancelled')->sum('total_amount');
+    $totalOrders = $orders->count();
+    $totalBooks = $orders->where('status', '!=', 'Cancelled')->flatMap->items->sum('quantity');
+
+    return view('admin.laporan', [
+        'orders' => $orders,
+        'filter' => $filter,
+        'startDate' => $startDate,
+        'endDate' => $endDate,
+        'totalRevenue' => $totalRevenue,
+        'totalOrders' => $totalOrders,
+        'totalBooks' => $totalBooks
+    ]);
+});
+
+Route::get('/admin/laporan-penjualan/export', function (Request $request) {
+    if (session('role') !== 'admin') return redirect('/')->with('error', 'Akses ditolak!');
+    
+    $filter = $request->input('filter', 'all');
+    $startDate = $request->input('start_date');
+    $endDate = $request->input('end_date');
+    
+    $query = Order::with(['user', 'items.book'])->orderBy('created_at', 'desc');
+
+    if ($startDate && $endDate) {
+        $query->whereBetween('created_at', [$startDate . ' 00:00:00', $endDate . ' 23:59:59']);
+        $periodLabel = "Custom ($startDate s/d $endDate)";
+    } else {
+        if ($filter === 'today') {
+            $query->whereDate('created_at', now()->today());
+        } elseif ($filter === 'week') {
+            $query->whereBetween('created_at', [now()->startOfWeek(), now()->endOfWeek()]);
+        } elseif ($filter === 'month') {
+            $query->whereMonth('created_at', now()->month)->whereYear('created_at', now()->year);
+        } elseif ($filter === 'year') {
+            $query->whereYear('created_at', now()->year);
+        }
+        $periodLabel = strtoupper($filter);
+    }
+
+    $orders = $query->get();
+    $totalRevenue = $orders->where('status', '!=', 'Cancelled')->sum('total_amount');
+    
+    $filename = "Laporan_Penjualan_CIVAD_" . date('Y-m-d') . ".doc";
+    
+    header("Content-type: application/vnd.ms-word");
+    header("Content-Disposition: attachment;Filename=$filename");
+    header("Pragma: no-cache");
+    header("Expires: 0");
+
+    echo "<html>";
+    echo "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=Windows-1252\">";
+    echo "<body>";
+    echo "<h1 style='text-align:center'>LAPORAN PENJUALAN CIVAD</h1>";
+    echo "<p style='text-align:center'>Periode: " . $periodLabel . "</p>";
+    echo "<hr>";
+    echo "<table border='1' cellpadding='10' cellspacing='0' style='width:100%; border-collapse:collapse'>";
+    echo "<tr style='background:#f4f4f4'><th>No. Pesanan</th><th>Tanggal</th><th>Pelanggan</th><th>Total</th><th>Status</th></tr>";
+    foreach($orders as $order) {
+        echo "<tr>";
+        echo "<td>#" . $order->order_number . "</td>";
+        echo "<td>" . $order->created_at->format('d/m/Y H:i') . "</td>";
+        echo "<td>" . ($order->user->name ?? 'Guest') . "</td>";
+        echo "<td>Rp " . number_format($order->total_amount, 0, ',', '.') . "</td>";
+        echo "<td>" . $order->status . "</td>";
+        echo "</tr>";
+    }
+    echo "</table>";
+    echo "<br>";
+    echo "<h3>TOTAL PENDAPATAN: Rp " . number_format($totalRevenue, 0, ',', '.') . "</h3>";
+    echo "</body>";
+    echo "</html>";
+    exit;
 });
 
 Route::post('/admin/pesanan/update-status', function (Request $request) {
@@ -333,7 +484,10 @@ Route::post('/pelanggan/keranjang/tambah', function (Request $request) {
     return redirect()->back()->with('success', $book->title . ' berhasil ditambahkan ke keranjang!');
 });
 
-Route::post('/pelanggan/beli-sekarang', function (Request $request) {
+Route::match(['get', 'post'], '/pelanggan/beli-sekarang', function (Request $request) {
+    if ($request->isMethod('get')) {
+        return redirect('/pelanggan/dashboard');
+    }
     $book = Book::findOrFail($request->input('buku_id'));
     $qtyToAdd = (int) $request->input('qty', 1);
 

@@ -3,12 +3,12 @@
 @section('title', 'Manajemen Banner')
 
 @section('header')
-    <div class="flex items-center gap-3 text-[12px] font-bold text-emerald-400 uppercase tracking-widest mb-2">
-        <a href="{{ url('/admin/dashboard') }}" class="hover:text-white transition-colors text-emerald-400/60">Admin</a>
-        <span>/</span>
-        <span class="text-white">Visual Marketing</span>
+    <div class="hidden md:flex items-center gap-3 text-[12px] font-black text-emerald-500 uppercase tracking-widest mb-2">
+        <a href="{{ url('/admin/dashboard') }}" class="hover:text-white transition-colors text-emerald-500">Admin</a>
+        <span class="text-white/20">/</span>
+        <span class="text-white">Marketing</span>
     </div>
-    <h2 class="text-[32px] font-black text-white tracking-tighter leading-none">Manajemen Banner Promo</h2>
+    <h2 class="text-base md:text-[28px] font-black text-white tracking-tighter leading-none truncate max-w-[180px] md:max-w-none">Manajemen Banner</h2>
 @endsection
 
 @section('topbar_actions')
@@ -26,7 +26,7 @@
         <div class="overflow-x-auto">
             <table class="w-full text-left border-collapse">
                 <thead>
-                    <tr class="text-[12px] font-black uppercase tracking-[0.2em] text-emerald-400 bg-emerald-950">
+                    <tr class="text-[12px] font-black uppercase tracking-[0.2em] text-white bg-emerald-950">
                         <th class="px-8 py-6 w-[400px]">Preview Visual</th>
                         <th class="px-8 py-6 text-center">Prioritas</th>
                         <th class="px-8 py-6 text-center">Status Publikasi</th>
@@ -53,8 +53,8 @@
                         </td>
                         <td class="px-8 py-6 text-center">
                             @if($banner->is_active)
-                            <span class="inline-flex items-center gap-2 px-4 py-2 bg-emerald-50 text-emerald-600 text-[11px] font-black rounded-full uppercase tracking-widest border border-emerald-200">
-                                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                            <span class="inline-flex items-center gap-2 px-4 py-2 bg-emerald-50 text-emerald-950 text-[11px] font-black rounded-full uppercase tracking-widest border border-emerald-950">
+                                <span class="w-2 h-2 rounded-full bg-emerald-950 animate-pulse"></span>
                                 Aktif
                             </span>
                             @else
@@ -66,7 +66,7 @@
                         </td>
                         <td class="px-8 py-6 text-center">
                             <div class="flex items-center justify-center gap-2">
-                                <button onclick="openEditModal('{{ $banner->id }}', '{{ $banner->image }}', '{{ $banner->order_priority }}', {{ $banner->is_active }})" class="w-11 h-11 flex items-center justify-center text-emerald-600 bg-white border border-emerald-100 hover:bg-emerald-600 hover:text-white hover:border-emerald-600 rounded-xl transition-all duration-300 shadow-sm">
+                                <button onclick="openEditModal('{{ $banner->id }}', '{{ $banner->image }}', '{{ $banner->order_priority }}', {{ $banner->is_active }})" class="w-11 h-11 flex items-center justify-center text-emerald-950 bg-white border border-emerald-950 hover:bg-emerald-950 hover:text-white rounded-xl transition-all duration-300 shadow-sm">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1-2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" /></svg>
                                 </button>
                                 <button onclick="openDeleteModal('{{ $banner->id }}', 'Banner Urutan {{ $banner->order_priority }}')" class="w-11 h-11 flex items-center justify-center text-rose-500 bg-white border border-rose-100 hover:bg-rose-500 hover:text-white hover:border-rose-500 rounded-xl transition-all duration-300 shadow-sm">
@@ -99,7 +99,7 @@
             <div class="flex items-center justify-between px-12 py-10 border-b border-emerald-800 bg-white/5">
                 <div>
                     <h3 id="modal-title" class="text-[28px] font-black text-white tracking-tighter leading-none">Tambah Banner Baru</h3>
-                    <p class="text-[12px] font-black text-emerald-400 uppercase tracking-[0.2em] mt-2">Konfigurasi visual promosi beranda</p>
+                    <p class="text-[12px] font-black text-white uppercase tracking-[0.2em] mt-2">Konfigurasi visual promosi beranda</p>
                 </div>
                 <button type="button" onclick="closeModal()" class="w-12 h-12 flex items-center justify-center rounded-2xl bg-white/10 shadow-xl border border-emerald-800 text-white hover:bg-rose-600 hover:text-white transition-all transform hover:rotate-90 duration-500 font-bold">✕</button>
             </div>
@@ -110,7 +110,7 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
                     <!-- Image Area -->
                     <div class="space-y-4">
-                        <label class="text-[13px] font-black text-white uppercase tracking-widest ml-1 block opacity-80">Visual Banner</label>
+                        <label class="text-[13px] font-black text-white uppercase tracking-widest ml-1 block">Visual Banner</label>
                         <div class="relative group h-[260px] bg-emerald-900 rounded-[40px] border-3 border-dashed border-emerald-800 overflow-hidden flex flex-col items-center justify-center gap-5 transition-all hover:border-white/20 hover:bg-emerald-800">
                             <img id="preview-image" src="" class="absolute inset-0 w-full h-full object-cover hidden">
                             <div id="upload-placeholder" class="flex flex-col items-center gap-4 text-center px-6">
@@ -122,13 +122,13 @@
                             <input type="file" id="file-input" class="absolute inset-0 opacity-0 cursor-pointer" accept="image/*" onchange="handleImage(this)">
                             <input type="hidden" name="image" id="input-image" required>
                         </div>
-                        <p class="text-[11px] text-emerald-100/50 font-black uppercase tracking-widest text-center">Rasio 16:9 atau 1920x600px</p>
+                        <p class="text-[11px] text-white font-black uppercase tracking-widest text-center">Rasio 16:9 atau 1920x600px</p>
                     </div>
 
                     <!-- Inputs Area -->
                     <div class="space-y-8">
                         <div class="space-y-2">
-                            <label class="text-[13px] font-black text-white uppercase tracking-widest ml-1 opacity-80">Urutan Prioritas</label>
+                            <label class="text-[13px] font-black text-white uppercase tracking-widest ml-1">Urutan Prioritas</label>
                             <input type="number" name="order_priority" id="input-order" required class="w-full px-6 py-4.5 bg-emerald-900 border border-emerald-800 rounded-[24px] text-[18px] font-black text-white focus:outline-none focus:ring-4 focus:ring-emerald-400/20 focus:border-emerald-400" value="0">
                         </div>
                         

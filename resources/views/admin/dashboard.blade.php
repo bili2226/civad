@@ -3,50 +3,55 @@
 @section('title', 'Dashboard')
 
 @section('header')
-    <h2 class="text-[28px] font-black text-white tracking-tighter leading-none">Ringkasan Dashboard</h2>
-    <p class="text-[14px] font-bold text-emerald-400 uppercase tracking-widest mt-2">Pantau aktivitas sistem hari ini</p>
+    <div class="hidden md:flex items-center gap-3 text-[12px] font-black text-emerald-500 uppercase tracking-widest mb-2">
+        <a href="{{ url('/admin/dashboard') }}" class="hover:text-white transition-colors">Admin</a>
+        <span class="text-white/20">/</span>
+        <span class="text-white">Dashboard</span>
+    </div>
+    <h2 class="text-base md:text-[28px] font-black text-white tracking-tighter leading-none truncate max-w-[180px] md:max-w-none">Ringkasan Dashboard</h2>
+    <p class="hidden md:block text-[14px] font-bold text-emerald-100/60 uppercase tracking-[0.2em] mt-2 truncate">Pantau aktivitas sistem hari ini</p>
 @endsection
 
 @section('content')
     <!-- Stats Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
-        <div class="stat-card bg-emerald-950 p-8 rounded-[40px] border border-emerald-800 shadow-sm flex flex-col gap-6">
-            <div class="w-20 h-20 bg-white/10 text-white rounded-full flex items-center justify-center shadow-inner">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-10 h-10"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25" /></svg>
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8 mb-12">
+        <div class="stat-card bg-emerald-950 p-6 md:p-10 rounded-[32px] md:rounded-[40px] border border-emerald-800 shadow-sm flex flex-col items-center text-center gap-4 group hover:scale-105 transition-all duration-500">
+            <div class="w-12 h-12 md:w-20 md:h-20 bg-white/10 text-white rounded-full flex items-center justify-center shadow-inner group-hover:bg-white/20 transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-6 h-6 md:w-10 md:h-10"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25" /></svg>
             </div>
             <div>
-                <h3 class="text-[26px] font-black text-white leading-none mb-1">{{ $totalJenisBuku }}</h3>
-                <p class="text-[13px] font-black text-emerald-100 uppercase tracking-widest opacity-80">Jenis Buku</p>
+                <h3 class="text-2xl md:text-[32px] font-black text-white leading-none mb-2">{{ $totalJenisBuku }}</h3>
+                <p class="text-[9px] md:text-[11px] font-black text-white/60 uppercase tracking-widest">Jenis Buku</p>
             </div>
         </div>
 
-        <div class="stat-card bg-emerald-950 p-8 rounded-[40px] border border-emerald-800 shadow-sm flex flex-col gap-6">
-            <div class="w-20 h-20 bg-white/10 text-white rounded-full flex items-center justify-center shadow-inner">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-10 h-10"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 1 0-7.5 0v4.5m11.356-1.993 1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 0 1-1.12-1.243l1.264-12A1.125 1.125 0 0 1 5.513 7.5h12.974c.576 0 1.059.435 1.119 1.007ZM8.625 10.5a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm7.5 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" /></svg>
+        <div class="stat-card bg-emerald-950 p-6 md:p-10 rounded-[32px] md:rounded-[40px] border border-emerald-800 shadow-sm flex flex-col items-center text-center gap-4 group hover:scale-105 transition-all duration-500">
+            <div class="w-12 h-12 md:w-20 md:h-20 bg-white/10 text-white rounded-full flex items-center justify-center shadow-inner group-hover:bg-white/20 transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-6 h-6 md:w-10 md:h-10"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 1 0-7.5 0v4.5m11.356-1.993 1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 0 1-1.12-1.243l1.264-12A1.125 1.125 0 0 1 5.513 7.5h12.974c.576 0 1.059.435 1.119 1.007ZM8.625 10.5a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm7.5 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" /></svg>
             </div>
             <div>
-                <h3 class="text-[26px] font-black text-white leading-none mb-1">{{ $totalBukuTerjual }}</h3>
-                <p class="text-[13px] font-black text-emerald-100 uppercase tracking-widest opacity-80">Buku Terjual</p>
+                <h3 class="text-2xl md:text-[32px] font-black text-white leading-none mb-2">{{ $totalPesanan }}</h3>
+                <p class="text-[9px] md:text-[11px] font-black text-white/60 uppercase tracking-widest">Pesanan</p>
             </div>
         </div>
 
-        <div class="stat-card bg-emerald-950 p-8 rounded-[40px] border border-emerald-800 shadow-sm flex flex-col gap-6">
-            <div class="w-20 h-20 bg-white/10 text-white rounded-full flex items-center justify-center shadow-inner">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-10 h-10"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18.75a60.07 60.07 0 0 1 15.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 0 1 3 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125H3.75m16.5-12.75V15" /></svg>
+        <div class="stat-card bg-emerald-950 p-6 md:p-10 rounded-[32px] md:rounded-[40px] border border-emerald-800 shadow-sm flex flex-col items-center text-center gap-4 group hover:scale-105 transition-all duration-500">
+            <div class="w-12 h-12 md:w-20 md:h-20 bg-white/10 text-white rounded-full flex items-center justify-center shadow-inner group-hover:bg-white/20 transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-6 h-6 md:w-10 md:h-10"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18.75a60.07 60.07 0 0 1 15.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 0 1 3 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125H3.75m16.5-12.75V15" /></svg>
             </div>
             <div>
-                <h3 class="text-[26px] font-black text-white leading-none mb-1">Rp {{ number_format($totalPendapatan, 0, ',', '.') }}</h3>
-                <p class="text-[13px] font-black text-emerald-100 uppercase tracking-widest opacity-80">Pendapatan</p>
+                <h3 class="text-2xl md:text-[32px] font-black text-white leading-none mb-2">Rp {{ number_format($totalPendapatan, 0, ',', '.') }}</h3>
+                <p class="text-[9px] md:text-[11px] font-black text-white/60 uppercase tracking-widest">Pendapatan</p>
             </div>
         </div>
 
-        <div class="stat-card bg-emerald-950 p-8 rounded-[40px] border border-emerald-800 shadow-sm flex flex-col gap-6">
-            <div class="w-20 h-20 bg-white/10 text-white rounded-full flex items-center justify-center shadow-inner">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-10 h-10"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" /></svg>
+        <div class="stat-card bg-emerald-950 p-6 md:p-10 rounded-[32px] md:rounded-[40px] border border-emerald-800 shadow-sm flex flex-col items-center text-center gap-4 group hover:scale-105 transition-all duration-500">
+            <div class="w-12 h-12 md:w-20 md:h-20 bg-white/10 text-white rounded-full flex items-center justify-center shadow-inner group-hover:bg-white/20 transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-6 h-6 md:w-10 md:h-10"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" /></svg>
             </div>
             <div>
-                <h3 class="text-[26px] font-black text-white leading-none mb-1">{{ $menungguVerifikasi }}</h3>
-                <p class="text-[13px] font-black text-emerald-100 uppercase tracking-widest opacity-80">Pesanan Pending</p>
+                <h3 class="text-2xl md:text-[32px] font-black text-white leading-none mb-2">{{ $menungguVerifikasi }}</h3>
+                <p class="text-[9px] md:text-[11px] font-black text-white/60 uppercase tracking-widest">Pending</p>
             </div>
         </div>
     </div>
@@ -97,7 +102,7 @@
         <div class="lg:col-span-2 bg-white p-8 rounded-[40px] border border-emerald-100 shadow-sm flex flex-col">
             <div class="mb-6">
                 <h3 class="text-[20px] font-black text-emerald-950 tracking-tight">Tren Pendapatan</h3>
-                <p class="text-[12px] font-bold text-emerald-600 uppercase tracking-widest mt-1">6 Bulan Terakhir</p>
+                <p class="text-[12px] font-bold text-emerald-900 uppercase tracking-widest mt-1">6 Bulan Terakhir</p>
             </div>
             <div class="flex-1 relative min-h-[300px]">
                 <canvas id="revenueChart"></canvas>
@@ -108,7 +113,7 @@
         <div class="bg-white p-8 rounded-[40px] border border-emerald-100 shadow-sm flex flex-col">
             <div class="mb-6">
                 <h3 class="text-[20px] font-black text-emerald-950 tracking-tight">Penjualan Buku</h3>
-                <p class="text-[12px] font-bold text-emerald-600 uppercase tracking-widest mt-1">Berdasarkan Tingkat Pendidikan</p>
+                <p class="text-[12px] font-bold text-emerald-900 uppercase tracking-widest mt-1">Berdasarkan Tingkat Pendidikan</p>
             </div>
             <div class="flex-1 relative min-h-[300px] mt-4">
                 @if(empty($bookSalesData))
@@ -130,7 +135,7 @@
         <div class="p-10 border-b border-emerald-50 flex items-center justify-between bg-emerald-50/20">
             <div>
                 <h3 class="text-[20px] font-black text-emerald-950 tracking-tight">Pesanan Pelanggan Terbaru</h3>
-                <p class="text-[12px] font-bold text-emerald-600 uppercase tracking-widest mt-1">Status transaksi real-time</p>
+                <p class="text-[12px] font-bold text-emerald-900 uppercase tracking-widest mt-1">Status transaksi real-time</p>
             </div>
             <a href="{{ url('/admin/manajemen-pesanan') }}" class="px-6 py-3 bg-white border border-emerald-100 rounded-2xl text-[13px] font-black text-emerald-900 hover:bg-emerald-950 hover:text-white transition-all shadow-sm">Lihat Semua</a>
         </div>
@@ -165,7 +170,7 @@
                                 {{ $order->items->count() }} Jenis Buku
                             </span>
                         </td>
-                        <td class="px-10 py-7 font-black text-emerald-600 text-lg">Rp {{ number_format($order->total_amount, 0, ',', '.') }}</td>
+                        <td class="px-10 py-7 font-black text-emerald-950 text-lg">Rp {{ number_format($order->total_amount, 0, ',', '.') }}</td>
                         <td class="px-10 py-7 text-center">
                             @php
                                 $statusClasses = [
@@ -192,7 +197,7 @@
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-10 h-10 text-emerald-200"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25" /></svg>
                             </div>
                             <p class="text-emerald-950 font-black text-xl mb-1">Belum Ada Transaksi</p>
-                            <p class="text-emerald-600 font-bold">Data aktivitas pesanan akan muncul di sini.</p>
+                            <p class="text-emerald-900 font-bold">Data aktivitas pesanan akan muncul di sini.</p>
                         </td>
                     </tr>
                     @endforelse

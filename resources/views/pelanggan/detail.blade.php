@@ -30,124 +30,118 @@
 @endsection
 
 @section('content')
-
-
-            <!-- Right Actions -->
-            <div class="flex items-center gap-4">
-                <a href="{{ url('/pelanggan/keranjang') }}" class="text-gray-500 hover:text-gray-800 transition relative">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-[22px] h-[22px]">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" />
-                    </svg>
-                    @if(session('cart_count', 0) > 0)
-                    <span class="absolute -top-1.5 -right-1.5 bg-red-500 text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center border border-white">
-                        {{ session('cart_count') }}
-                    </span>
-                    @endif
-                </a>
-                <div class="h-6 w-px bg-gray-200"></div>
-                <div class="flex items-center gap-2 bg-[#F0F5FF] text-[#2563EB] px-3 py-1.5 rounded-full text-[13px] font-semibold border border-blue-100 uppercase tracking-tight">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" /></svg>
-                    {{ session('username') ?? 'andi' }}
-                </div>
-                <form action="{{ route('logout') }}" method="POST">
-                    @csrf
-                    <button type="submit" class="flex items-center gap-2 px-4 py-2 text-red-500 hover:bg-red-50 rounded-xl font-bold text-[13px] transition active:scale-95">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 9V5.25A2.25 2.25 0 0 1 10.5 3h6a2.25 2.25 0 0 1 2.25 2.25v13.5A2.25 2.25 0 0 1 16.5 21h-6a2.25 2.25 0 0 1-2.25-2.25V15m-3 0-3-3m0 0 3-3m-3 3H15" /></svg>
-                        Keluar
-                    </button>
-                </form>
-            </div>
+    <a href="{{ url('/pelanggan/dashboard') }}" class="inline-flex items-center gap-3 text-emerald-950 hover:text-emerald-800 text-[13px] font-black mb-10 transition-all group">
+        <div class="w-8 h-8 rounded-full bg-emerald-50 border border-emerald-100 flex items-center justify-center shadow-sm group-hover:-translate-x-1 transition-transform">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" /></svg>
         </div>
-    </header>
+        Kembali ke Katalog
+    </a>
 
-    <main class="max-w-[900px] mx-auto px-6 py-8">
-        <a href="{{ url('/pelanggan/dashboard') }}" class="inline-flex items-center gap-2 text-gray-500 hover:text-gray-800 text-[13px] font-medium mb-6">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
-            </svg>
-            Kembali ke Katalog
-        </a>
-
-        <!-- Detail Card -->
-        <div class="bg-white rounded-[24px] shadow-sm border border-gray-100 p-6 flex flex-col md:flex-row gap-8">
-            <!-- Image Side -->
-            <div class="w-full md:w-5/12">
-                <div class="aspect-square rounded-[16px] overflow-hidden bg-gray-100">
-                    <img src="{{ $book['image'] }}" alt="Book cover" class="w-full h-full object-cover">
+    <div class="bg-white rounded-[40px] md:rounded-[60px] border border-emerald-100 shadow-2xl overflow-hidden mb-12">
+        <div class="flex flex-col lg:flex-row">
+            <!-- Image Section -->
+            <div class="w-full lg:w-1/2 p-6 md:p-12 bg-emerald-50/30 flex items-center justify-center">
+                <div class="relative group w-full max-w-[400px]">
+                    <div class="absolute inset-0 bg-emerald-950 rounded-[32px] md:rounded-[48px] rotate-3 scale-105 opacity-5 group-hover:rotate-6 transition-transform duration-700"></div>
+                    <div class="relative aspect-[3/4] rounded-[32px] md:rounded-[48px] overflow-hidden shadow-2xl border-8 border-white">
+                        <img src="{{ $book['image'] }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                    </div>
                 </div>
             </div>
 
-            <!-- Content Side -->
-            <div class="w-full md:w-7/12 flex flex-col pt-2">
-                <div class="flex gap-2 mb-4">
-                    <span class="px-2.5 py-1 bg-[#F0F5FF] text-[#2563EB] rounded-md text-[11px] font-bold">{{ $book['category'] }}</span>
-                    <span class="px-2.5 py-1 bg-gray-50 border border-gray-200 text-gray-600 rounded-md text-[11px] font-bold">{{ $book['class'] }}</span>
+            <!-- Content Section -->
+            <div class="w-full lg:w-1/2 p-8 md:p-16 flex flex-col">
+                <div class="flex flex-wrap items-center gap-3 mb-6">
+                    <span class="px-4 py-1.5 bg-emerald-950 text-white text-[10px] font-black uppercase tracking-widest rounded-full">
+                        {{ $book['category'] }}
+                    </span>
+                    <span class="px-4 py-1.5 bg-emerald-50 text-emerald-950 text-[10px] font-black uppercase tracking-widest rounded-full border border-emerald-100">
+                        {{ $book['class'] }}
+                    </span>
+                    <div class="flex items-center gap-1.5 text-emerald-900 ml-auto">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" /></svg>
+                        <span class="text-[12px] font-black">Stok Ready</span>
+                    </div>
                 </div>
 
-                <h1 class="text-[22px] font-bold text-[#111827] mb-2 leading-tight">{{ $book['title'] }}</h1>
-                <div class="text-[#2563EB] text-[24px] font-bold mb-3">{{ $book['price'] }}</div>
+                <h1 class="text-[32px] md:text-[48px] font-black text-emerald-950 leading-[1.1] tracking-tighter mb-4">{{ $book['title'] }}</h1>
+                <p class="text-emerald-900/60 font-bold text-[14px] uppercase tracking-widest mb-8">Penerbit Arya Duta • Kurikulum Merdeka</p>
 
-                <div class="flex items-center gap-1.5 text-green-600 mb-6">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-                    </svg>
-                    <span class="text-[12px] font-bold">Stok tersedia: {{ $book['stock'] }} buku</span>
+                <div class="bg-emerald-50/50 rounded-[32px] p-8 border border-emerald-100 mb-10">
+                    <p class="text-[12px] font-black text-emerald-800 uppercase tracking-widest mb-2">Harga Per Buku</p>
+                    <div class="flex items-baseline gap-2">
+                        <span class="text-[40px] font-black text-emerald-950 tracking-tighter">{{ $book['price'] }}</span>
+                    </div>
                 </div>
-
-                <div class="h-px bg-gray-100 mb-5"></div>
-
-                <div class="mb-5">
-                    <h3 class="text-[13px] font-bold text-[#111827] mb-2">Deskripsi</h3>
-                    <p class="text-[13px] text-gray-500 leading-relaxed">
-                        {{ $book['desc'] }}
-                    </p>
-                </div>
-
-                <div class="h-px bg-gray-100 mb-5"></div>
 
                 <form action="{{ url('/pelanggan/keranjang/tambah') }}" method="POST" class="mt-auto">
                     @csrf
-                    <input type="hidden" name="buku_id" value="{{ $book['id'] }}">
+                    <input type="hidden" name="id" value="{{ $book['id'] }}">
                     
-                    <div class="mb-5">
-                        <h3 class="text-[12px] font-bold text-gray-700 mb-3">Jumlah Pembelian</h3>
-                        <div class="flex items-center gap-2">
-                            <button type="button" onclick="decreaseQty()" class="w-9 h-9 flex items-center justify-center border border-gray-200 rounded-[8px] text-gray-500 hover:bg-gray-50 hover:text-black transition">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14" />
-                                </svg>
+                    <div class="flex flex-col sm:flex-row items-stretch gap-4">
+                        <div class="flex items-center bg-white border-2 border-emerald-950 rounded-2xl p-1.5 shadow-sm">
+                            <button type="button" onclick="decreaseQty()" class="w-12 h-12 flex items-center justify-center text-emerald-950 hover:bg-emerald-50 rounded-xl transition-all">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" class="w-5 h-5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14" /></svg>
                             </button>
-                            <input type="number" id="qty" name="qty" value="1" min="1" max="{{ $book['stock'] }}" class="w-12 h-9 text-center border-0 p-0 text-[14px] font-bold text-[#111827] focus:ring-0 appearance-none bg-transparent">
-                            <button type="button" onclick="increaseQty()" class="w-9 h-9 flex items-center justify-center border border-gray-200 rounded-[8px] text-gray-500 hover:bg-gray-50 hover:text-black transition">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-                                </svg>
+                            <input type="number" name="qty" id="qty" value="1" min="1" max="{{ $book['stock'] }}" onchange="updateSubtotal()" class="w-16 text-center border-0 focus:ring-0 text-xl font-black text-emerald-950 bg-transparent">
+                            <button type="button" onclick="increaseQty()" class="w-12 h-12 flex items-center justify-center text-emerald-950 hover:bg-emerald-50 rounded-xl transition-all">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" class="w-5 h-5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" /></svg>
                             </button>
                         </div>
+                        <button type="submit" class="flex-grow bg-emerald-950 text-white px-8 py-5 rounded-2xl font-black text-[16px] hover:bg-emerald-800 transition-all shadow-xl shadow-emerald-950/20 flex items-center justify-center gap-4 group">
+                            Tambah ke Keranjang
+                            <div class="w-6 h-6 bg-white/10 rounded-lg flex items-center justify-center group-hover:translate-x-1 transition-transform">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" /></svg>
+                            </div>
+                        </button>
                     </div>
-
-                    <div class="flex items-center justify-between mb-5">
-                        <span class="text-[14px] text-gray-500">Subtotal</span>
-                        <span id="subtotal" class="text-[18px] font-bold text-[#111827]">{{ $book['price'] }}</span>
+                    
+                    <div class="mt-6 flex items-center justify-between px-2">
+                        <span class="text-[12px] font-black text-emerald-800 uppercase tracking-widest">Subtotal Estimasi</span>
+                        <span id="subtotal" class="text-[24px] font-black text-emerald-950 tracking-tighter">Rp {{ number_format($book['base_price'], 0, ',', '.') }}</span>
                     </div>
-
-                    <button type="submit" class="w-full flex items-center justify-center gap-2 bg-[#2563EB] text-white py-3.5 rounded-xl text-[14px] font-bold hover:bg-blue-700 transition shadow-sm">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-[18px] h-[18px]">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" />
-                        </svg>
-                        Tambah ke Keranjang
-                    </button>
                 </form>
             </div>
         </div>
-    </main>
+    </div>
+
+    <!-- Details/Description -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
+        <div class="lg:col-span-2 space-y-12">
+            <section>
+                <div class="flex items-center gap-4 mb-8">
+                    <div class="w-2 h-10 bg-emerald-500 rounded-full"></div>
+                    <h3 class="text-[28px] font-black text-emerald-950 tracking-tight">Sinopsis & Deskripsi</h3>
+                </div>
+                <div class="prose prose-emerald max-w-none text-emerald-800/80 leading-relaxed font-medium text-[16px]">
+                    {{ $book['description'] }}
+                </div>
+            </section>
+        </div>
+
+        <div class="space-y-8">
+            <div class="bg-emerald-50 rounded-[40px] p-8 border border-emerald-100 shadow-sm relative overflow-hidden">
+                <div class="absolute -right-10 -top-10 w-32 h-32 bg-white/50 rounded-full blur-2xl"></div>
+                <h4 class="relative z-10 text-[14px] font-black text-emerald-950 mb-8 uppercase tracking-[0.2em]">Spesifikasi Produk</h4>
+                <div class="space-y-6 relative z-10">
+                    <div class="flex justify-between items-center pb-4 border-b border-emerald-950/5">
+                        <span class="text-[13px] font-bold text-emerald-900/60 uppercase">Stok Tersedia</span>
+                        <span class="text-[15px] font-black text-emerald-950">{{ $book['stock'] }} Eks</span>
+                    </div>
+                    <div class="flex justify-between items-center pb-4 border-b border-emerald-950/5">
+                        <span class="text-[13px] font-bold text-emerald-900/60 uppercase">Kategori</span>
+                        <span class="text-[15px] font-black text-emerald-950">{{ $book['category'] }}</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-[13px] font-bold text-emerald-900/60 uppercase">Penerbit</span>
+                        <span class="text-[15px] font-black text-emerald-950">Arya Duta</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <style>
-        /* Hide arrows for number inputs */
-        input[type=number]::-webkit-inner-spin-button, 
-        input[type=number]::-webkit-outer-spin-button { 
-            -webkit-appearance: none; 
-            margin: 0; 
-        }
+        input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
     </style>
 @endsection

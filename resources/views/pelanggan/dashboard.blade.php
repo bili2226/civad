@@ -5,16 +5,23 @@
 @section('content')
 
     <!-- Header Section -->
-    <div class="mb-16 bg-emerald-950 rounded-[40px] border border-emerald-800/30 p-12 shadow-2xl relative overflow-hidden">
+    <div class="mb-16 bg-emerald-950 rounded-[40px] border border-emerald-800/30 py-8 px-12 shadow-2xl relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-10">
         <div class="absolute -right-10 -top-10 w-96 h-96 rounded-full bg-emerald-500/20 blur-[120px]"></div>
         <div class="absolute -left-10 -bottom-10 w-72 h-72 rounded-full bg-emerald-400/10 blur-[100px]"></div>
-        <div class="relative z-10 max-w-4xl">
+        
+        <div class="relative z-10 max-w-2xl text-left">
             <div class="inline-flex items-center gap-2 px-4 py-1.5 bg-emerald-500/20 rounded-full border border-emerald-400/20 mb-6">
                 <span class="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></span>
                 <p class="text-[11px] uppercase tracking-[0.4em] font-black text-emerald-400">Official Catalog</p>
             </div>
-            <h1 class="text-5xl md:text-7xl font-black text-white leading-[1.1] tracking-tighter mb-6 font-serif">Temukan buku pendidikan <br>terbaik untuk <span class="italic text-emerald-400">setiap jenjang</span>.</h1>
-            <p class="text-emerald-100/70 text-xl leading-relaxed max-w-3xl font-medium">Jelajahi katalog lengkap kami dengan pilihan buku berkualitas untuk SD, SMP, SMA, serta dukungan layanan pengiriman cepat dan aman.</p>
+            <h1 class="text-4xl md:text-6xl font-black text-white leading-[1.1] tracking-tighter mb-6 font-serif">Temukan buku pendidikan <br>terbaik untuk <span class="italic text-emerald-400">setiap jenjang</span>.</h1>
+            <p class="text-emerald-100/70 text-lg leading-relaxed max-w-xl font-medium">Jelajahi katalog lengkap kami dengan pilihan buku berkualitas untuk SD, SMP, SMA, serta dukungan layanan pengiriman cepat dan aman.</p>
+        </div>
+
+        <div class="relative z-10 hidden lg:block w-[480px] floating">
+            <img src="{{ asset('bukukatalog.png') }}"
+                 class="w-full h-auto rounded-[32px] shadow-2xl border-4 border-white/10 -rotate-1 group-hover:rotate-0 transition-transform duration-700" 
+                 alt="Educational Books">
         </div>
     </div>
 
@@ -45,55 +52,55 @@
     </div>
 
     <!-- Catalog Grid -->
-    <div id="catalog-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+    <div id="catalog-grid" class="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-8">
         @foreach($dummyBooks as $book)
-        <div class="book-card bg-white border-2 border-emerald-950 rounded-[36px] p-5 shadow-2xl flex flex-col relative overflow-hidden group hover:-translate-y-3 transition-all duration-500 hover:shadow-emerald-900/20" 
+        <div class="book-card bg-white border-2 border-emerald-950 rounded-[32px] md:rounded-[36px] p-4 md:p-5 shadow-2xl flex flex-col relative overflow-hidden group hover:-translate-y-3 transition-all duration-500 hover:shadow-emerald-900/20" 
              data-title="{{ strtolower($book['title']) }}" 
              data-author="{{ strtolower($book['author'] ?? 'arya duta') }}" 
              data-class="{{ $book['class'] }}">
 
             <!-- Image Wrapper -->
-            <div class="relative aspect-[3/4] rounded-[28px] overflow-hidden bg-emerald-50 mb-6 shadow-md border border-emerald-50">
+            <div class="relative aspect-[4/5] rounded-[24px] md:rounded-[28px] overflow-hidden bg-emerald-50 mb-3 md:mb-4 shadow-md border border-emerald-50">
                 <img src="{{ $book['image'] }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
                 <!-- Category Badge Floating -->
-                <div class="absolute top-4 left-4 flex flex-col gap-2">
-                    <span class="px-4 py-1.5 bg-red-600 text-white text-[10px] font-black uppercase tracking-widest rounded-full shadow-lg">
+                <div class="absolute top-3 left-3 md:top-4 md:left-4 flex flex-col gap-1.5">
+                    <span class="px-3 md:px-4 py-1 bg-red-600 text-white text-[8px] md:text-[10px] font-black uppercase tracking-widest rounded-full shadow-lg">
                         {{ $book['category'] }}
                     </span>
-                    <span class="px-4 py-1.5 bg-white text-emerald-950 text-[10px] font-black uppercase tracking-widest rounded-full shadow-lg border border-emerald-100">
+                    <span class="px-3 md:px-4 py-1 bg-white text-emerald-950 text-[8px] md:text-[10px] font-black uppercase tracking-widest rounded-full shadow-lg border border-emerald-100">
                         {{ $book['class'] }}
                     </span>
                 </div>
             </div>
 
             <!-- Content -->
-            <div class="flex-grow px-2">
-                <div class="flex items-center gap-2 mb-3">
-                    <span class="text-[11px] font-bold text-emerald-600 uppercase tracking-widest">{{ $book['author'] ?? 'Arya Duta Team' }}</span>
-                    <div class="w-1 h-1 bg-emerald-200 rounded-full"></div>
-                    <span class="text-[11px] font-black text-red-500 uppercase tracking-widest">Stok: {{ $book['stock'] }}</span>
+            <div class="flex-grow px-1 md:px-2">
+                <div class="flex flex-wrap items-center gap-x-2 gap-y-1 mb-2 md:mb-3">
+                    <span class="text-[9px] md:text-[11px] font-bold text-emerald-900 uppercase tracking-widest truncate max-w-[60px] md:max-w-none">{{ $book['author'] ?? 'Arya Duta Team' }}</span>
+                    <div class="hidden md:block w-1 h-1 bg-emerald-200 rounded-full"></div>
+                    <span class="text-[9px] md:text-[11px] font-black text-red-500 uppercase tracking-widest">Stok: {{ $book['stock'] }}</span>
                 </div>
                 <a href="{{ url('/pelanggan/buku/' . $book['id']) }}" class="block group/title">
-                    <h3 class="text-[18px] font-extrabold text-emerald-950 leading-tight mb-4 group-hover/title:text-emerald-600 transition-colors line-clamp-2 min-h-[44px]">
+                    <h3 class="text-sm md:text-[17px] font-extrabold text-emerald-950 leading-tight mb-1 md:mb-2 group-hover/title:text-emerald-600 transition-colors line-clamp-3">
                         {{ $book['title'] }}
                     </h3>
                 </a>
             </div>
 
             <!-- Footer / Price & Action -->
-            <div class="mt-4 pt-6 border-t border-emerald-100 flex flex-col gap-3">
-                <div class="flex items-center justify-between px-2 mb-2">
-                    <span class="text-[24px] font-black text-emerald-950 tracking-tight">{{ $book['price'] }}</span>
+            <div class="mt-2 pt-2 md:pt-4 border-t border-emerald-100 flex flex-col gap-3">
+                <div class="flex items-center justify-between px-1 md:px-2 mb-1 md:mb-2">
+                    <span class="text-lg md:text-[24px] font-black text-emerald-950 tracking-tight">{{ $book['price'] }}</span>
                 </div>
                 
-                <div class="grid grid-cols-1 gap-3">
+                <div class="grid grid-cols-1 gap-2 md:gap-3">
                     <!-- Buy Now Button -->
                     <form action="{{ url('/pelanggan/beli-sekarang') }}" method="POST" class="w-full">
                         @csrf
                         <input type="hidden" name="buku_id" value="{{ $book['id'] }}">
                         <input type="hidden" name="qty" value="1">
-                        <button type="submit" class="w-full flex items-center justify-center gap-2 bg-emerald-950 text-white py-4 rounded-[20px] text-[14px] font-black shadow-xl shadow-emerald-950/20 hover:bg-emerald-800 transition-all active:scale-95 group/buy">
-                            Pesan Sekarang
+                        <button type="submit" class="w-full flex items-center justify-center gap-2 bg-emerald-950 text-white py-3 md:py-4 rounded-[16px] md:rounded-[20px] text-[12px] md:text-[14px] font-black shadow-xl shadow-emerald-950/20 hover:bg-emerald-800 transition-all active:scale-95 group/buy">
+                            Pesan
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" class="w-4 h-4 group-hover/buy:translate-x-1 transition-transform"><path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" /></svg>
                         </button>
                     </form>
@@ -103,9 +110,9 @@
                         @csrf
                         <input type="hidden" name="buku_id" value="{{ $book['id'] }}">
                         <input type="hidden" name="qty" value="1">
-                        <button type="submit" class="w-full flex items-center justify-center gap-2 bg-white text-emerald-950 border-2 border-emerald-950 py-3.5 rounded-[20px] text-[13px] font-black hover:bg-emerald-50 transition-all active:scale-95 group/cart">
+                        <button type="submit" class="w-full flex items-center justify-center gap-2 bg-white text-emerald-950 border-2 border-emerald-950 py-2.5 md:py-3.5 rounded-[16px] md:rounded-[20px] text-[11px] md:text-[13px] font-black hover:bg-emerald-50 transition-all active:scale-95 group/cart">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4 group-hover/cart:rotate-12 transition-transform"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" /></svg>
-                            Tambah Keranjang
+                            Keranjang
                         </button>
                     </form>
                 </div>
@@ -116,7 +123,7 @@
 
     <!-- Empty State -->
     <div id="empty-state" class="hidden py-24 text-center">
-        <div class="w-24 h-24 bg-emerald-50 text-emerald-200 rounded-full flex items-center justify-center mx-auto mb-6">
+        <div class="w-24 h-24 bg-emerald-50 text-emerald-900 rounded-full flex items-center justify-center mx-auto mb-6">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-12 h-12"><path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" /></svg>
         </div>
         <h3 class="text-2xl font-black text-emerald-950 mb-2">Buku Tidak Ditemukan</h3>

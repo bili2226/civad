@@ -203,144 +203,138 @@
 @endsection
 
 @section('content')
+    <div class="mb-12 text-center md:text-left">
+        <h1 class="text-[32px] md:text-[48px] font-black text-emerald-950 tracking-tighter leading-none mb-3">Informasi Pengiriman</h1>
+        <p class="text-emerald-900 font-bold text-[12px] md:text-[14px] uppercase tracking-[0.3em]">Selesaikan Pesanan Anda dengan Detail Akurat</p>
+    </div>
 
-
-    <main class="max-w-[1280px] mx-auto px-6 py-12">
-        <header class="mb-12">
-            <h1 class="text-[36px] font-black text-emerald-950 tracking-tighter mb-3 leading-none">Informasi Pengiriman</h1>
-            <p class="text-emerald-900 font-bold text-[14px] uppercase tracking-widest">Selesaikan Pesanan Anda dengan Detail Akurat</p>
-        </header>
-
-        <form action="{{ url('/pelanggan/pembayaran') }}" method="POST">
-            @csrf
-            <div class="flex flex-col xl:flex-row gap-12">
+    <form action="{{ url('/pelanggan/pembayaran') }}" method="POST">
+        @csrf
+        <div class="flex flex-col xl:flex-row gap-8 md:gap-16">
             <!-- Left Side: Forms -->
             <div class="flex-grow flex flex-col gap-8">
                 
                 <!-- Identitas Penerima -->
-                <div class="form-card bg-emerald-50/30 p-8 rounded-[40px] border border-emerald-100 shadow-sm backdrop-blur-sm">
-                    <div class="flex items-center gap-4 mb-10">
+                <div class="bg-emerald-50/30 p-6 md:p-10 rounded-[40px] border border-emerald-100 shadow-sm backdrop-blur-sm">
+                    <div class="flex items-center gap-4 mb-8">
                         <div class="w-12 h-12 bg-emerald-100 text-emerald-700 rounded-2xl flex items-center justify-center">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" /></svg>
                         </div>
                         <div>
                             <h3 class="text-[18px] font-black text-emerald-950 tracking-tight">Identitas Penerima</h3>
-                            <p class="text-[12px] font-bold text-emerald-800 uppercase tracking-widest mt-0.5">Pastikan data kontak sudah benar</p>
+                            <p class="text-[11px] font-bold text-emerald-900 uppercase tracking-widest mt-0.5">Kontak Pengiriman</p>
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                        <div class="space-y-3">
-                            <label class="text-[13px] font-extrabold text-slate-700 ml-1">Nama Lengkap</label>
-                            <input type="text" name="recipient_name" placeholder="Masukkan nama penerima" class="input-premium w-full px-6 py-4 rounded-2xl text-[14px] font-bold text-emerald-950 focus:outline-none" required>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="space-y-2.5">
+                            <label class="text-[12px] font-black text-emerald-900 uppercase tracking-widest ml-1">Nama Lengkap</label>
+                            <input type="text" name="recipient_name" placeholder="Nama penerima..." class="w-full px-6 py-4 rounded-2xl bg-white border-2 border-emerald-950 focus:outline-none text-[15px] font-bold text-emerald-950 transition-all placeholder:text-emerald-950/20" required>
                         </div>
-                        <div class="space-y-3">
-                            <label class="text-[13px] font-extrabold text-slate-700 ml-1">Nomor Handphone</label>
-                            <input type="text" name="phone_number" placeholder="Masukkan nomor handphone" class="input-premium w-full px-6 py-4 rounded-2xl text-[14px] font-bold text-emerald-950 focus:outline-none" required>
+                        <div class="space-y-2.5">
+                            <label class="text-[12px] font-black text-emerald-900 uppercase tracking-widest ml-1">No. Handphone</label>
+                            <input type="text" name="phone_number" placeholder="Contoh: 0812..." class="w-full px-6 py-4 rounded-2xl bg-white border-2 border-emerald-950 focus:outline-none text-[15px] font-bold text-emerald-950 transition-all placeholder:text-emerald-950/20" required>
                         </div>
                     </div>
                 </div>
 
                 <!-- Lokasi Pengiriman -->
-                <div class="form-card bg-white p-8 rounded-[40px] border border-emerald-100 shadow-sm">
-                    <div class="flex items-center gap-4 mb-10">
+                <div class="bg-white p-6 md:p-10 rounded-[40px] border border-emerald-100 shadow-xl">
+                    <div class="flex items-center gap-4 mb-8">
                         <div class="w-12 h-12 bg-amber-50 text-amber-600 rounded-2xl flex items-center justify-center">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" /></svg>
                         </div>
                         <div>
                             <h3 class="text-[18px] font-black text-emerald-950 tracking-tight">Detail Lokasi</h3>
-                            <p class="text-[12px] font-bold text-emerald-900 uppercase tracking-widest mt-0.5">Alamat lengkap & estimasi jarak</p>
+                            <p class="text-[11px] font-bold text-emerald-900 uppercase tracking-widest mt-0.5">Alamat & Jarak</p>
                         </div>
                     </div>
 
                     <div class="space-y-8">
-                        <div class="space-y-3 mb-6">
-                            <div class="flex justify-between items-center mb-2">
-                                <label class="text-[13px] font-extrabold text-slate-700 ml-1 italic">Tentukan Titik Pengiriman pada Peta</label>
-                                <button type="button" id="btn-geo" onclick="useCurrentLocation()" class="flex items-center gap-2 px-4 py-2 bg-emerald-950 text-white text-[11px] font-black rounded-xl hover:bg-emerald-800 transition-all shadow-md">
+                        <div class="space-y-4">
+                            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-2">
+                                <label class="text-[12px] font-black text-emerald-900 uppercase tracking-widest ml-1">Tandai Lokasi di Peta</label>
+                                <button type="button" id="btn-geo" onclick="useCurrentLocation()" class="flex items-center gap-2 px-5 py-2.5 bg-emerald-950 text-white text-[10px] font-black rounded-xl hover:bg-emerald-800 transition-all shadow-lg active:scale-95 shrink-0">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" /></svg>
-                                    Gunakan Lokasi Saat Ini
+                                    Lokasi Saat Ini
                                 </button>
                             </div>
-                            <div id="map" class="z-0"></div>
-                            <p class="text-[11px] font-bold text-emerald-800 mt-2 ml-1">*Klik pada peta atau gunakan tombol di atas untuk menandai lokasi Anda</p>
+                            <div id="map" class="h-[250px] md:h-[400px] rounded-[32px] overflow-hidden border-4 border-emerald-50"></div>
                             
                             <input type="hidden" name="latitude" id="lat_input">
                             <input type="hidden" name="longitude" id="lng_input">
                         </div>
 
                         <div class="space-y-3">
-                            <label class="text-[13px] font-extrabold text-slate-700 ml-1">Alamat Lengkap Pengiriman</label>
-                            <textarea id="alamat_lengkap" name="address" class="input-premium w-full px-6 py-4 rounded-[28px] text-[14px] font-bold text-emerald-950 focus:outline-none h-32 resize-none" placeholder="Masukkan alamat lengkap tujuan pengiriman..." required></textarea>
+                            <label class="text-[12px] font-black text-emerald-900 uppercase tracking-widest ml-1">Alamat Lengkap</label>
+                            <textarea id="alamat_lengkap" name="address" class="w-full px-6 py-4 rounded-[28px] bg-white border-2 border-emerald-950 focus:outline-none text-[15px] font-bold text-emerald-950 h-32 resize-none transition-all placeholder:text-emerald-950/20" placeholder="Masukkan alamat pengiriman selengkap mungkin..." required></textarea>
                         </div>
                         
                         <div class="space-y-3">
-                            <label class="text-[13px] font-extrabold text-slate-700 ml-1">Estimasi Jarak dari Gudang</label>
-                            <div class="relative group">
-                                <select id="jarak" name="distance_km" onchange="updateSummary()" class="input-premium w-full px-6 py-4 rounded-2xl text-[14px] font-black text-emerald-950 focus:outline-none appearance-none cursor-pointer">
+                            <label class="text-[12px] font-black text-emerald-900 uppercase tracking-widest ml-1">Estimasi Jarak</label>
+                            <div class="relative">
+                                <select id="jarak" name="distance_km" onchange="updateSummary()" class="w-full px-6 py-4 rounded-2xl bg-white border-2 border-emerald-950 focus:outline-none text-[15px] font-black text-emerald-950 appearance-none cursor-pointer transition-all">
                                     @for($i=1; $i<=20; $i++)
                                     <option value="{{ $i }}" {{ $i == 3 ? 'selected' : '' }}>{{ $i }} km</option>
                                     @endfor
                                 </select>
-                                <div class="absolute inset-y-0 right-6 flex items-center pointer-events-none text-emerald-900">
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" /></svg>
+                                <div class="absolute inset-y-0 right-6 flex items-center pointer-events-none text-emerald-950/30">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" /></svg>
                                 </div>
                             </div>
-                            <p class="text-[11px] font-bold text-emerald-800 mt-2 ml-1 italic">*Biaya pengiriman otomatis dihitung Rp 2.800 per KM</p>
+                            <p class="text-[11px] font-bold text-emerald-900 mt-2 ml-1 italic">*Biaya kirim: Rp 2.800 / KM</p>
                         </div>
                     </div>
                 </div>
 
                 <!-- Reward Poin -->
-                <div class="form-card bg-emerald-950 p-8 rounded-[40px] text-white flex items-center justify-between shadow-xl relative overflow-hidden group">
+                <div class="bg-emerald-950 p-6 md:p-8 rounded-[40px] text-white flex items-center justify-between shadow-2xl relative overflow-hidden group">
                     <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-white/5 rounded-full group-hover:scale-150 transition-transform duration-700"></div>
-                    <div class="flex items-center gap-6 relative z-10">
-                        <div class="w-14 h-14 bg-white/10 backdrop-blur-md rounded-2xl flex items-center justify-center border border-white/20 text-emerald-400">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-7 h-7"><path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /><path stroke-linecap="round" stroke-linejoin="round" d="M15.91 11.672a.375.375 0 010 .656l-5.603 3.113a.375.375 0 01-.557-.328V8.887c0-.286.307-.466.557-.327l5.603 3.112z" /></svg>
+                    <div class="flex items-center gap-4 md:gap-6 relative z-10">
+                        <div class="w-12 h-12 md:w-14 md:h-14 bg-white/10 backdrop-blur-md rounded-2xl flex items-center justify-center border border-white/20 text-emerald-400">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-6 h-6 md:w-7 md:h-7"><path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /><path stroke-linecap="round" stroke-linejoin="round" d="M15.91 11.672a.375.375 0 010 .656l-5.603 3.113a.375.375 0 01-.557-.328V8.887c0-.286.307-.466.557-.327l5.603 3.112z" /></svg>
                         </div>
                         <div>
-                            <h3 class="text-[18px] font-black tracking-tight">Reward Loyalitas</h3>
-                            <p class="text-emerald-800 text-[12px] font-bold uppercase tracking-widest mt-0.5">Poin yang akan Anda dapatkan</p>
+                            <h3 class="text-[16px] md:text-[18px] font-black tracking-tight">Reward Poin</h3>
+                            <p class="text-emerald-400/50 text-[10px] md:text-[11px] font-black uppercase tracking-widest mt-0.5">Bonus Pembelian Ini</p>
                         </div>
                     </div>
-                    <div id="poin_didapat" class="text-[24px] font-black text-white bg-white/10 px-6 py-3 rounded-2xl border border-white/10 shadow-inner relative z-10">
+                    <div id="poin_didapat" class="text-[18px] md:text-[24px] font-black text-white bg-white/10 px-6 py-3 rounded-2xl border border-white/10 shadow-inner relative z-10">
                         0 Poin
                     </div>
                 </div>
             </div>
 
             <!-- Right Side: Order Summary -->
-            <div class="w-full xl:w-[420px] flex-shrink-0">
-                <div class="bg-emerald-950 p-10 rounded-[48px] border border-white/10 shadow-2xl sticky top-28 overflow-hidden group/summary">
-                    <!-- Background Decor -->
-                    <div class="absolute -right-20 -top-20 w-64 h-64 bg-emerald-600 rounded-full blur-[100px] opacity-20 group-hover/summary:opacity-30 transition-opacity"></div>
-                    <div class="absolute -left-20 -bottom-20 w-48 h-48 bg-emerald-400 rounded-full blur-[80px] opacity-10"></div>
+            <div class="w-full xl:w-[460px] flex-shrink-0">
+                <div class="bg-emerald-950 p-8 md:p-12 rounded-[40px] md:rounded-[56px] border border-white/10 shadow-2xl sticky top-28 overflow-hidden group/summary">
+                    <div class="absolute -right-20 -top-20 w-64 h-64 bg-emerald-600 rounded-full blur-[100px] opacity-20"></div>
                     
                     <div class="relative z-10">
-                        <h2 class="text-[22px] font-black text-white tracking-tight mb-8 flex items-center gap-3">
-                            <div class="w-2 h-8 bg-emerald-500 rounded-full"></div>
-                            Ringkasan Pesanan
+                        <h2 class="text-[22px] md:text-[26px] font-black text-white tracking-tight mb-8 flex items-center gap-4">
+                            <div class="w-1.5 h-8 bg-emerald-500 rounded-full"></div>
+                            Konfirmasi Pesanan
                         </h2>
                         
-                        <div class="space-y-4 mb-10 max-h-[300px] overflow-y-auto pr-2 custom-scrollbar">
+                        <div class="space-y-4 mb-10 max-h-[250px] overflow-y-auto pr-2 custom-scrollbar">
                             @foreach(session('cart', []) as $item)
                             <div class="flex items-center gap-4 bg-white/5 p-4 rounded-[28px] border border-white/10 hover:bg-white/10 transition-all group">
-                                <div class="w-14 h-14 bg-white/10 rounded-2xl overflow-hidden border border-white/10 flex-shrink-0 shadow-sm group-hover:scale-105 transition-transform">
-                                    <img src="{{ $item['image'] ?? (\App\Models\Book::find($item['id'])->image ?? 'https://images.unsplash.com/photo-1543002588-bfa74002ed7e?q=80&w=800&auto=format&fit=crop') }}" class="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity">
+                                <div class="w-14 h-14 bg-white/10 rounded-2xl overflow-hidden border border-white/10 flex-shrink-0 shadow-sm">
+                                    <img src="{{ $item['image'] ?? (\App\Models\Book::find($id)->image ?? '') }}" class="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity">
                                 </div>
                                 <div class="flex-grow min-w-0">
                                     <p class="text-[13px] font-black text-emerald-50 truncate leading-tight mb-2">{{ $item['title'] }}</p>
                                     <div class="flex items-center justify-between">
-                                        <div class="flex items-center gap-3 bg-white/10 backdrop-blur-md px-2 py-1 rounded-xl border border-white/10 shadow-sm">
-                                            <button type="button" onclick="changeItemQty('{{ $item['id'] }}', -1)" class="w-6 h-6 flex items-center justify-center text-emerald-400 hover:text-white hover:bg-white/10 rounded-lg transition-all active:scale-90">
+                                        <div class="flex items-center gap-2 bg-white/10 px-2 py-1 rounded-lg">
+                                            <button type="button" onclick="changeItemQty('{{ $item['id'] }}', -1)" class="w-6 h-6 flex items-center justify-center text-emerald-400 hover:text-white rounded-md transition-all active:scale-75">
                                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" class="w-3 h-3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14" /></svg>
                                             </button>
                                             <span id="qty-{{ $item['id'] }}" class="text-[11px] font-black text-white w-4 text-center">{{ $item['qty'] }}</span>
-                                            <button type="button" onclick="changeItemQty('{{ $item['id'] }}', 1)" class="w-6 h-6 flex items-center justify-center text-emerald-400 hover:text-white hover:bg-white/10 rounded-lg transition-all active:scale-90">
+                                            <button type="button" onclick="changeItemQty('{{ $item['id'] }}', 1)" class="w-6 h-6 flex items-center justify-center text-emerald-400 hover:text-white rounded-md transition-all active:scale-75">
                                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" class="w-3 h-3"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" /></svg>
                                             </button>
                                         </div>
-                                        <span class="text-[13px] font-black text-emerald-300 transition-all" id="subtotal-{{ $item['id'] }}" data-price="{{ $item['price'] }}">
+                                        <span class="text-[13px] font-black text-emerald-400" id="subtotal-{{ $item['id'] }}" data-price="{{ $item['price'] }}">
                                             Rp {{ number_format($item['price'] * $item['qty'], 0, ',', '.') }}
                                         </span>
                                     </div>
@@ -351,34 +345,33 @@
 
                         <div class="space-y-4 pt-8 border-t border-white/10 mb-10">
                             <div class="flex justify-between items-center text-[14px]">
-                                <span class="font-bold text-emerald-300/70">Total Produk</span>
-                                <span id="display_total_produk" class="font-black text-white">Rp 0</span>
+                                <span class="font-bold text-emerald-400/60 uppercase tracking-widest text-[11px]">Subtotal Produk</span>
+                                <span id="display_total_produk" class="font-black text-white text-[16px]">Rp 0</span>
                             </div>
                             <div class="flex justify-between items-center text-[14px]">
-                                <span class="font-bold text-emerald-300/70">Biaya Kirim</span>
-                                <span id="ongkir_total" class="font-black text-emerald-400">Rp 0</span>
+                                <span class="font-bold text-emerald-400/60 uppercase tracking-widest text-[11px]">Biaya Pengiriman</span>
+                                <span id="ongkir_total" class="font-black text-emerald-400 text-[16px]">Rp 0</span>
                             </div>
                             @if(session('active_discount', 0) > 0)
                             <div class="flex justify-between items-center text-[14px]">
-                                <span class="font-bold text-red-400">Potongan Poin</span>
-                                <span class="font-black text-red-400">- Rp {{ number_format(session('active_discount'), 0, ',', '.') }}</span>
+                                <span class="font-bold text-rose-400 uppercase tracking-widest text-[11px]">Potongan Rewards</span>
+                                <span class="font-black text-rose-400 text-[16px]">- Rp {{ number_format(session('active_discount'), 0, ',', '.') }}</span>
                             </div>
                             @endif
                         </div>
 
-                        <div class="bg-white/5 backdrop-blur-md p-8 rounded-[32px] mb-10 border border-white/10 shadow-inner">
-                            <p class="text-[12px] font-bold text-emerald-400 uppercase tracking-widest mb-2 text-center">Total Pembayaran</p>
-                            <p id="total_pembayaran" class="text-[36px] font-black text-white tracking-tighter text-center leading-none">Rp 0</p>
+                        <div class="bg-white/5 backdrop-blur-md p-8 rounded-[40px] mb-10 border border-white/10 shadow-inner">
+                            <p class="text-[11px] font-black text-emerald-400 uppercase tracking-[0.2em] mb-3 text-center">Total Pembayaran</p>
+                            <p id="total_pembayaran" class="text-[36px] md:text-[44px] font-black text-white tracking-tighter text-center leading-none">Rp 0</p>
                         </div>
 
-                        <button type="submit" class="w-full flex items-center justify-center gap-3 bg-emerald-500 text-emerald-950 py-5 rounded-[24px] text-[16px] font-black shadow-xl shadow-emerald-500/20 hover:bg-emerald-400 hover:scale-[1.02] transition-all active:scale-95 group">
-                            Buat Pesanan Sekarang
+                        <button type="submit" class="w-full flex items-center justify-center gap-4 bg-white text-emerald-950 py-5 rounded-2xl text-[16px] font-black shadow-xl hover:bg-emerald-50 hover:scale-[1.02] transition-all active:scale-95 group">
+                            Bayar Sekarang
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" class="w-5 h-5 group-hover:translate-x-1 transition-transform"><path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" /></svg>
                         </button>
                     </div>
                 </div>
             </div>
         </div>
-        </form>
-    </main>
+    </form>
 @endsection

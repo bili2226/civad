@@ -94,6 +94,14 @@
     <!-- Right Panel: Login Form -->
     <div class="w-full lg:w-2/5 flex flex-col justify-center items-center p-8 lg:p-20 relative bg-white">
         <div class="w-full max-w-[440px]">
+            <!-- Quick Back Navigation -->
+            <a href="{{ url('/') }}" class="inline-flex items-center gap-3 mb-10 px-6 py-3 bg-emerald-50 text-emerald-950 rounded-full text-[12px] font-black uppercase tracking-widest shadow-sm hover:bg-emerald-950 hover:text-white transition-all active:scale-95 group">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" class="w-4 h-4 group-hover:-translate-x-1 transition-transform">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
+                </svg>
+                Kembali ke Beranda
+            </a>
+
             <div class="mb-12">
                 <h1 class="text-4xl font-black text-emerald-950 tracking-tight mb-3">Selamat Datang</h1>
                 <p class="text-emerald-950 font-medium opacity-70">Masuk ke akun Arya Duta Anda.</p>

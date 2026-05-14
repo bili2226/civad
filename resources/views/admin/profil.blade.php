@@ -44,15 +44,12 @@
 @endsection
 
 @section('header')
-<div class="flex items-center gap-6">
-    <div class="w-14 h-14 bg-white/10 rounded-2xl flex items-center justify-center border border-white/10">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-7 h-7 text-white"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" /></svg>
-    </div>
-    <div>
-        <h1 class="text-[28px] font-black text-white tracking-tighter leading-none">Pengaturan Profil</h1>
-        <p class="text-emerald-400 font-bold text-[11px] uppercase tracking-[0.2em] mt-2">Personalize Your Admin Identity</p>
-    </div>
+<div class="hidden md:flex items-center gap-3 text-[12px] font-black text-emerald-500 uppercase tracking-widest mb-2">
+    <a href="{{ url('/admin/dashboard') }}" class="hover:text-white transition-colors">Admin</a>
+    <span class="text-white/20">/</span>
+    <span class="text-white">Profil</span>
 </div>
+<h2 class="text-base md:text-[28px] font-black text-white tracking-tighter leading-none truncate max-w-[180px] md:max-w-none">Identitas Admin</h2>
 @endsection
 
 @section('content')

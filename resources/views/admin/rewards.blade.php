@@ -3,12 +3,12 @@
 @section('title', 'Manajemen Rewards')
 
 @section('header')
-    <div class="flex items-center gap-3 text-[12px] font-bold text-emerald-400 uppercase tracking-widest mb-2">
-        <a href="{{ url('/admin/dashboard') }}" class="hover:text-white transition-colors text-emerald-400/60">Admin</a>
-        <span>/</span>
-        <span class="text-white">Loyalty Rewards</span>
+    <div class="hidden md:flex items-center gap-3 text-[12px] font-black text-emerald-500 uppercase tracking-widest mb-2">
+        <a href="{{ url('/admin/dashboard') }}" class="hover:text-white transition-colors">Admin</a>
+        <span class="text-white/20">/</span>
+        <span class="text-white">Rewards</span>
     </div>
-    <h2 class="text-[32px] font-black text-white tracking-tighter leading-none">Kelola Rewards & Loyalty</h2>
+    <h2 class="text-base md:text-[28px] font-black text-white tracking-tighter leading-none truncate max-w-[180px] md:max-w-none">Kelola Rewards</h2>
 @endsection
 
 @section('topbar_actions')
@@ -90,17 +90,17 @@
                 <input type="hidden" name="id" id="input-id">
                 
                 <div class="space-y-2">
-                    <label class="text-[13px] font-black text-emerald-900 uppercase tracking-widest ml-1 opacity-60">Deskripsi</label>
+                    <label class="text-[13px] font-black text-emerald-950 uppercase tracking-widest ml-1">Deskripsi</label>
                     <input type="text" name="description" id="input-description" required class="w-full px-6 py-4 bg-emerald-50/50 border border-emerald-100 rounded-[20px] text-[15px] font-black text-emerald-950 focus:outline-none focus:border-emerald-950 transition-all" placeholder="Contoh: Diskon Member Spesial">
                 </div>
 
                 <div class="grid grid-cols-2 gap-4">
                     <div class="space-y-2">
-                        <label class="text-[13px] font-black text-emerald-900 uppercase tracking-widest ml-1 opacity-60">Poin Butuh</label>
+                        <label class="text-[13px] font-black text-emerald-950 uppercase tracking-widest ml-1">Poin Butuh</label>
                         <input type="number" name="points_required" id="input-points" required class="w-full px-6 py-4 bg-emerald-50/50 border border-emerald-100 rounded-[20px] text-[16px] font-black text-amber-600 focus:outline-none focus:border-emerald-950 transition-all">
                     </div>
                     <div class="space-y-2">
-                        <label class="text-[13px] font-black text-emerald-900 uppercase tracking-widest ml-1 opacity-60">Diskon (Rp)</label>
+                        <label class="text-[13px] font-black text-emerald-950 uppercase tracking-widest ml-1">Diskon (Rp)</label>
                         <input type="number" name="discount_amount" id="input-discount" required class="w-full px-6 py-4 bg-emerald-50/50 border border-emerald-100 rounded-[20px] text-[16px] font-black text-emerald-600 focus:outline-none focus:border-emerald-950 transition-all">
                     </div>
                 </div>

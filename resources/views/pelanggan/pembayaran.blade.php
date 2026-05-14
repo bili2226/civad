@@ -21,7 +21,7 @@
     <main class="max-w-[1280px] mx-auto px-6 py-12">
         <header class="mb-12">
             <h1 class="text-[36px] font-black text-emerald-950 tracking-tighter mb-3 leading-none">Konfirmasi Pesanan</h1>
-            <p class="text-emerald-600 font-bold text-[14px] uppercase tracking-widest">Tinjau Pesanan Anda Sebelum Membayar</p>
+            <p class="text-emerald-950 font-bold text-[14px] uppercase tracking-widest">Tinjau Pesanan Anda Sebelum Membayar</p>
         </header>
 
         @if(session('error'))
@@ -56,9 +56,9 @@
                                     <div class="absolute top-4 right-6 text-emerald-600">
                                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6"><path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm13.36-1.814a.75.75 0 1 0-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 0 0-1.06 1.06l2.25 2.25a.75.75 0 0 0 1.14-.094l3.75-5.25Z" clip-rule="evenodd" /></svg>
                                     </div>
-                                    <p class="text-[11px] font-black text-emerald-400 uppercase tracking-[0.2em] mb-4">Midtrans Payment</p>
+                                    <p class="text-[11px] font-black text-emerald-900 uppercase tracking-[0.2em] mb-4">Midtrans Payment</p>
                                     <p class="text-[20px] font-black text-emerald-950 tracking-tight leading-none mb-1">Multi Payment Gateway</p>
-                                    <p class="text-[13px] font-bold text-emerald-700 mt-2">Dukung VA, GoPay, OVO, & Kartu Kredit</p>
+                                    <p class="text-[13px] font-bold text-emerald-900 mt-2">Dukung VA, GoPay, OVO, & Kartu Kredit</p>
                                 </div>
                             </div>
 
@@ -103,7 +103,7 @@
                                 </div>
                                 <div class="flex-grow">
                                     <p class="text-[13px] font-black text-emerald-950 leading-tight line-clamp-1">{{ $item['title'] }}</p>
-                                    <p class="text-[11px] font-bold text-emerald-600 mt-1 uppercase">{{ $item['qty'] }} Unit</p>
+                                    <p class="text-[11px] font-bold text-emerald-900 mt-1 uppercase">{{ $item['qty'] }} Unit</p>
                                 </div>
                                 <span class="text-[13px] font-black text-emerald-950">Rp {{ number_format($item['price'] * $item['qty'], 0, ',', '.') }}</span>
                             </div>
@@ -112,11 +112,11 @@
 
                         <div class="space-y-4 mb-10 border-t border-emerald-50 pt-8">
                             <div class="flex justify-between items-center text-[14px]">
-                                <span class="font-bold text-emerald-600">Total Produk</span>
+                                <span class="font-bold text-emerald-900">Total Produk</span>
                                 <span class="font-black text-emerald-950">Rp {{ number_format(collect(session('cart', []))->sum(fn($i) => $i['price'] * $i['qty']), 0, ',', '.') }}</span>
                             </div>
                             <div class="flex justify-between items-center text-[14px]">
-                                <span class="font-bold text-emerald-600">Biaya Pengiriman ({{ $request->distance_km ?? 3 }} km)</span>
+                                <span class="font-bold text-emerald-900">Biaya Pengiriman ({{ $request->distance_km ?? 3 }} km)</span>
                                 <span class="font-black text-emerald-500">Rp {{ number_format(($request->distance_km ?? 3) * 2800, 0, ',', '.') }}</span>
                             </div>
                         </div>
@@ -133,7 +133,7 @@
                             Bayar Sekarang
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" class="w-5 h-5 group-hover:translate-x-1 transition-transform"><path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" /></svg>
                         </button>
-                        <p class="text-[11px] text-center text-emerald-600 font-bold mt-6 italic">Anda akan diarahkan ke halaman pembayaran aman Midtrans.</p>
+                        <p class="text-[11px] text-center text-emerald-900 font-bold mt-6 italic">Anda akan diarahkan ke halaman pembayaran aman Midtrans.</p>
                     </div>
                 </div>
             </div>

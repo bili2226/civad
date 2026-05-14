@@ -3,12 +3,12 @@
 @section('title', 'Manajemen Buku')
 
 @section('header')
-    <div class="flex items-center gap-3 text-[12px] font-bold text-emerald-400 uppercase tracking-widest mb-2">
-        <a href="{{ url('/admin/dashboard') }}" class="hover:text-white transition-colors text-emerald-400/60">Admin</a>
-        <span>/</span>
-        <span class="text-white">Katalog Buku</span>
+    <div class="hidden md:flex items-center gap-3 text-[12px] font-black text-emerald-500 uppercase tracking-widest mb-2">
+        <a href="{{ url('/admin/dashboard') }}" class="hover:text-white transition-colors">Admin</a>
+        <span class="text-white/20">/</span>
+        <span class="text-white">Katalog</span>
     </div>
-    <h2 class="text-[32px] font-black text-white tracking-tighter leading-none">Katalog Literasi CIVAD</h2>
+    <h2 class="text-base md:text-[28px] font-black text-white tracking-tighter leading-none truncate max-w-[180px] md:max-w-none">Manajemen Katalog</h2>
 @endsection
 
 @section('topbar_actions')
@@ -22,13 +22,13 @@
 
 @section('content')
     <!-- Search & Filter -->
-    <form action="{{ url('/admin/manajemen-buku') }}" method="GET" class="bg-white p-6 rounded-[32px] border border-emerald-100 shadow-sm mb-10 flex flex-col md:flex-row gap-4 backdrop-blur-md">
+    <form action="{{ url('/admin/manajemen-buku') }}" method="GET" class="bg-white p-6 rounded-[32px] shadow-sm mb-10 flex flex-col md:flex-row gap-4 backdrop-blur-md">
         <div class="relative flex-grow group">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-6 h-6 absolute left-6 top-1/2 -translate-y-1/2 text-emerald-900/50 transition-colors"><path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" /></svg>
-            <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari berdasarkan judul atau penulis..." class="w-full bg-emerald-50/30 border-2 border-emerald-200 rounded-2xl py-4 pl-16 pr-8 text-[15px] font-bold text-emerald-950 focus:outline-none focus:border-emerald-500 transition-all placeholder:text-emerald-900/40">
+            <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari berdasarkan judul atau penulis..." class="w-full bg-emerald-50/30 border-2 border-emerald-950 rounded-2xl py-4 pl-16 pr-8 text-[15px] font-bold text-emerald-950 focus:outline-none focus:border-emerald-500 transition-all placeholder:text-emerald-950/20">
         </div>
         <div class="relative min-w-[240px]">
-            <select name="category" onchange="this.form.submit()" class="w-full bg-emerald-50/30 border-2 border-emerald-200 rounded-2xl py-4 pl-6 pr-12 text-[15px] font-bold text-emerald-950 focus:outline-none focus:border-emerald-500 appearance-none cursor-pointer transition-all">
+            <select name="category" onchange="this.form.submit()" class="w-full bg-emerald-50/30 border-2 border-emerald-950 rounded-2xl py-4 pl-6 pr-12 text-[15px] font-bold text-emerald-950 focus:outline-none focus:border-emerald-500 appearance-none cursor-pointer transition-all">
                 <option value="">Semua Jenjang</option>
                 <option value="SD/MI" {{ request('category') == 'SD/MI' ? 'selected' : '' }}>SD/MI</option>
                 <option value="SMP/MTs" {{ request('category') == 'SMP/MTs' ? 'selected' : '' }}>SMP/MTs</option>
@@ -40,11 +40,11 @@
     </form>
 
     <!-- Table Container -->
-    <div class="bg-white rounded-[32px] border border-emerald-100 shadow-xl shadow-emerald-900/5 overflow-hidden">
+    <div class="bg-white rounded-[32px] border-2 border-emerald-950 shadow-xl shadow-emerald-900/5 overflow-hidden">
         <div class="overflow-x-auto">
             <table class="w-full text-left border-collapse">
                 <thead>
-                    <tr class="text-[12px] font-black uppercase tracking-[0.2em] text-emerald-400 bg-emerald-950">
+                    <tr class="text-[12px] font-black uppercase tracking-[0.2em] text-white bg-emerald-950">
                         <th class="px-8 py-6 w-32 text-center">Sampul</th>
                         <th class="px-8 py-6">Detail Informasi</th>
                         <th class="px-8 py-6">Jenjang / Kelas</th>
@@ -71,7 +71,7 @@
                         <td class="px-8 py-6">
                             <div class="flex flex-col items-start gap-2">
                                 <span class="inline-flex items-center px-4 py-1.5 bg-emerald-100/50 text-emerald-900 text-[11px] font-black rounded-full border border-emerald-200 uppercase tracking-widest">{{ $book->category }}</span>
-                                <span class="text-[13px] font-black text-emerald-950 opacity-60 italic px-2">{{ $book->class }}</span>
+                                <span class="text-[13px] font-black text-emerald-950 italic px-2">{{ $book->class }}</span>
                             </div>
                         </td>
                         <td class="px-8 py-6 text-center">
@@ -128,7 +128,7 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
                     <!-- Image Area -->
                     <div class="space-y-4">
-                        <label class="text-[13px] font-black text-emerald-900 uppercase tracking-widest ml-1 block opacity-60">Foto Sampul Katalog</label>
+                        <label class="text-[13px] font-black text-emerald-950 uppercase tracking-widest ml-1 block">Foto Sampul Katalog</label>>Foto Sampul Katalog</label>
                         <div class="relative group h-[340px] bg-emerald-50/50 rounded-[40px] border-3 border-dashed border-emerald-100 overflow-hidden flex flex-col items-center justify-center gap-5 transition-all hover:border-emerald-950/20 hover:bg-emerald-50">
                             <img id="preview-image" src="" class="absolute inset-0 w-full h-full object-cover hidden">
                             <div id="upload-placeholder" class="flex flex-col items-center gap-4 text-center px-6">
@@ -148,16 +148,16 @@
                     <!-- Inputs Area -->
                     <div class="space-y-6">
                         <div class="space-y-2">
-                            <label class="text-[13px] font-black text-emerald-900 uppercase tracking-widest ml-1 opacity-60">Judul Katalog</label>
+                            <label class="text-[13px] font-black text-emerald-950 uppercase tracking-widest ml-1">Judul Katalog</label>
                             <input type="text" name="title" id="input-title" required class="w-full px-6 py-4.5 bg-emerald-50/50 border border-emerald-100 rounded-[24px] text-[15px] font-black text-emerald-950 focus:outline-none focus:ring-4 focus:ring-emerald-500/5 focus:border-emerald-950 transition-all placeholder:text-emerald-900/30">
                         </div>
                         <div class="space-y-2">
-                            <label class="text-[13px] font-black text-emerald-900 uppercase tracking-widest ml-1 opacity-60">Nama Penulis</label>
+                            <label class="text-[13px] font-black text-emerald-950 uppercase tracking-widest ml-1">Nama Penulis</label>
                             <input type="text" name="author" id="input-author" required class="w-full px-6 py-4.5 bg-emerald-50/50 border border-emerald-100 rounded-[24px] text-[15px] font-black text-emerald-950 focus:outline-none focus:ring-4 focus:ring-emerald-500/5 focus:border-emerald-950 transition-all">
                         </div>
                         <div class="grid grid-cols-2 gap-4">
                             <div class="space-y-2">
-                                <label class="text-[13px] font-black text-emerald-900 uppercase tracking-widest ml-1 opacity-60">Jenjang</label>
+                                <label class="text-[13px] font-black text-emerald-950 uppercase tracking-widest ml-1">Jenjang</label>
                                 <select name="category" id="input-category" class="w-full px-6 py-4.5 bg-emerald-50/50 border border-emerald-100 rounded-[24px] text-[15px] font-black text-emerald-950 focus:outline-none focus:ring-4 focus:ring-emerald-500/5 focus:border-emerald-950 appearance-none cursor-pointer">
                                     <option value="SD/MI">SD/MI</option>
                                     <option value="SMP/MTs">SMP/MTs</option>
@@ -165,24 +165,24 @@
                                 </select>
                             </div>
                             <div class="space-y-2">
-                                <label class="text-[13px] font-black text-emerald-900 uppercase tracking-widest ml-1 opacity-60">Kelas</label>
+                                <label class="text-[13px] font-black text-emerald-950 uppercase tracking-widest ml-1">Kelas</label>
                                 <input type="text" name="class_level" id="input-class" required class="w-full px-6 py-4.5 bg-emerald-50/50 border border-emerald-100 rounded-[24px] text-[15px] font-black text-emerald-950 focus:outline-none focus:ring-4 focus:ring-emerald-500/5 focus:border-emerald-950" placeholder="10">
                             </div>
                         </div>
                         <div class="grid grid-cols-2 gap-4">
                             <div class="space-y-2">
-                                <label class="text-[13px] font-black text-emerald-900 uppercase tracking-widest ml-1 opacity-60">Harga (Rp)</label>
+                                <label class="text-[13px] font-black text-emerald-950 uppercase tracking-widest ml-1">Harga (Rp)</label>
                                 <input type="number" name="price" id="input-price" required class="w-full px-6 py-4.5 bg-emerald-50/50 border border-emerald-100 rounded-[24px] text-[16px] font-black text-emerald-600 focus:outline-none focus:ring-4 focus:ring-emerald-500/5 focus:border-emerald-950">
                             </div>
                             <div class="space-y-2">
-                                <label class="text-[13px] font-black text-emerald-900 uppercase tracking-widest ml-1 opacity-60">Stok</label>
+                                <label class="text-[13px] font-black text-emerald-950 uppercase tracking-widest ml-1">Stok</label>
                                 <input type="number" name="stock" id="input-stock" required class="w-full px-6 py-4.5 bg-emerald-50/50 border border-emerald-100 rounded-[24px] text-[16px] font-black text-emerald-950 focus:outline-none focus:ring-4 focus:ring-emerald-500/5 focus:border-emerald-950">
                             </div>
                         </div>
                     </div>
 
                     <div class="col-span-1 md:col-span-2 space-y-2">
-                        <label class="text-[13px] font-black text-emerald-900 uppercase tracking-widest ml-1 opacity-60">Deskripsi Katalog</label>
+                        <label class="text-[13px] font-black text-emerald-950 uppercase tracking-widest ml-1">Deskripsi Katalog</label>
                         <textarea name="desc" id="input-desc" rows="4" class="w-full px-8 py-6 bg-emerald-50/50 border border-emerald-100 rounded-[32px] text-[15px] font-medium text-emerald-950 focus:outline-none focus:ring-4 focus:ring-emerald-500/5 focus:border-emerald-950 resize-none transition-all" placeholder="Tuliskan ringkasan materi atau keunggulan buku ini..."></textarea>
                     </div>
                 </div>

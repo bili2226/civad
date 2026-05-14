@@ -88,12 +88,12 @@
 @endsection
 
 @section('header')
-    <div class="flex items-center gap-3 text-[12px] font-bold text-emerald-400 uppercase tracking-widest mb-2">
-        <a href="{{ url('/admin/dashboard') }}" class="hover:text-white transition-colors text-emerald-400/60">Admin</a>
-        <span>/</span>
-        <span class="text-white">Pesanan Pelanggan</span>
+    <div class="hidden md:flex items-center gap-3 text-[12px] font-black text-emerald-500 uppercase tracking-widest mb-2">
+        <a href="{{ url('/admin/dashboard') }}" class="hover:text-white transition-colors">Admin</a>
+        <span class="text-white/20">/</span>
+        <span class="text-white">Pesanan</span>
     </div>
-    <h2 class="text-[32px] font-black text-white tracking-tighter leading-none">Daftar Transaksi Masuk</h2>
+    <h2 class="text-base md:text-[28px] font-black text-white tracking-tighter leading-none truncate max-w-[180px] md:max-w-none">Daftar Transaksi</h2>
 @endsection
 
 @section('content')
@@ -179,7 +179,7 @@
                                 </div>
                                 <div>
                                     <p class="font-black text-emerald-950 text-[15px] leading-tight">{{ $order->user->name ?? 'Unknown' }}</p>
-                                    <p class="text-[10px] font-black text-emerald-600 uppercase tracking-widest mt-1 opacity-60 italic">Loyal Customer</p>
+                                    <p class="text-[10px] font-black text-emerald-950 uppercase tracking-widest mt-1 italic">Loyal Customer</p>
                                 </div>
                             </div>
                         </td>
@@ -269,7 +269,7 @@
                         <div class="mt-10 p-8 bg-emerald-950 rounded-[40px] text-white shadow-2xl relative overflow-hidden group">
                             <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-white/5 rounded-full group-hover:scale-150 transition-transform duration-700"></div>
                             <div class="relative z-10">
-                                <p class="text-emerald-400 font-black text-[11px] uppercase tracking-[0.3em] mb-2 opacity-60">Total Pelunasan</p>
+                                <p class="text-white font-black text-[11px] uppercase tracking-[0.3em] mb-2">Total Pelunasan</p>
                                 <p id="modal-total-payment" class="text-[42px] font-black text-white tracking-tighter leading-none">Rp 0</p>
                             </div>
                         </div>
@@ -304,7 +304,7 @@
                         </div>
 
                         <div class="space-y-2">
-                            <label class="text-[13px] font-black text-emerald-900 uppercase tracking-widest ml-1 opacity-60">Alamat Lengkap Tujuan</label>
+                            <label class="text-[13px] font-black text-emerald-950 uppercase tracking-widest ml-1">Alamat Lengkap Tujuan</label>
                             <div id="modal-customer-address" class="w-full bg-emerald-50/50 border border-emerald-100 rounded-[32px] p-6 text-[14px] font-bold text-emerald-950 leading-relaxed min-h-[120px] italic"></div>
                         </div>
                     </div>
